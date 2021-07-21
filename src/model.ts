@@ -10,12 +10,19 @@ export interface OakActionStatus extends OakBase {}
  */
 export interface OakService extends OakBase {}
 
+export interface OakServiceOperation extends OakBase {
+  service: OakService;
+}
+
+export interface OakResource extends OakBase {}
+
 /**
  * Configuration of a service
  * @example read-from-s3
  */
 export interface OakAction extends OakBase {
-  service: OakService;
+  serviceOperation: OakServiceOperation;
+  resource: OakResource;
   statusList: OakActionStatus[];
 }
 
