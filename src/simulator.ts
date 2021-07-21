@@ -6,6 +6,31 @@ import {
   OakResponseEvent,
 } from './model';
 
+function cloneValue<A>(value: A): A {
+  const jsonstr = JSON.stringify(value);
+  const result: A = JSON.parse(jsonstr);
+  return result;
+}
+
+class OakEventLog {
+  reqEvents: OakInnerRequestEvent[];
+  constructor() {
+    this.reqEvents = [];
+  }
+  reset() {
+    this.reqEvents = [];
+  }
+
+  addReqEvent(reqEvent: OakRequestEvent) {
+    const event = { id: this.reqEvents.length, ...reqEvent };
+    this.reqEvents.push(cloneValue(event));
+  }
+
+  toInfo() {
+    return JSON.stringify(this.reqEvents, null, 2);
+  }
+}
+
 const toResponseEvent = (
   _: OakAction,
   status: OakActionStatus
@@ -20,15 +45,13 @@ const toResponseEvent = (
     },
   };
 };
-const simCaller = (eventsLog: OakInnerRequestEvent[]) => async (
+const simCaller = (eventsLog: OakEventLog) => async (
   reqEvent: OakRequestEvent
 ) => {
-  const event = { id: eventsLog.length, ...reqEvent };
-  eventsLog.push(event);
-  console.log(eventsLog);
+  eventsLog.addReqEvent(reqEvent);
   return Promise.resolve(
     toResponseEvent(reqEvent.action, reqEvent.action.statusList[0])
   );
 };
 
-export { simCaller };
+export { simCaller, OakEventLog };

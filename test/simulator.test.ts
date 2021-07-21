@@ -1,9 +1,10 @@
 import { OakRequestEvent } from '../src/model';
-import { simCaller } from '../src/simulator';
+import { OakEventLog, simCaller } from '../src/simulator';
 import { actionObj } from './fixture-action';
 
 describe('Caller Simulator', () => {
-  const mainSimCaller = simCaller([]);
+  const eventsLog = new OakEventLog();
+  const mainSimCaller = simCaller(eventsLog);
   it('simulates function call', () => {
     const aa: OakRequestEvent = {
       action: actionObj.readLondonData,
@@ -24,5 +25,6 @@ describe('Caller Simulator', () => {
     mainSimCaller(aa);
     mainSimCaller(aa);
     mainSimCaller(aa);
+    console.log(eventsLog.toInfo());
   });
 });
