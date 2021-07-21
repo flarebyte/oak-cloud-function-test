@@ -26,15 +26,20 @@ export interface OakAction extends OakBase {
   statusList: OakActionStatus[];
 }
 
+export interface OakServiceParams {
+  comment: string;
+  body: object;
+}
+
 export interface OakPayload {
-  information: string;
-  schema: string;
+  comment: string;
   body: object;
 }
 
 export interface OakRequestEvent {
   action: OakAction;
   caller: string;
+  serviceParams: OakServiceParams;
   payload: OakPayload;
 }
 

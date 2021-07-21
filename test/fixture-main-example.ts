@@ -5,8 +5,7 @@ import { statusObj } from './fixture-status';
 const okResponse: OakResponseEvent = {
   status: statusObj.ok,
   payload: {
-    schema: 'status',
-    information: 'Success',
+    comment: 'Success',
     body: {
       message: 'Ok',
     },
@@ -52,9 +51,14 @@ const londonService = async (call: OakCall, request: OakRequestEvent) => {
   const writeLondonDataReq: OakRequestEvent = {
     action: actionObj.writeLondonData,
     caller: `action:${request.action.name}`,
+    serviceParams: {
+      comment: 'london params',
+      body: {
+        path: 'city',
+      },
+    },
     payload: {
-      schema: 'schema:city-data',
-      information: 'Saving data for London',
+      comment: 'Saving data for London',
       body: {
         city: 'London',
         datetime: cityReqPayload.datetime,
@@ -71,9 +75,14 @@ const parisService = async (call: OakCall, request: OakRequestEvent) => {
   const writeParisDataReq: OakRequestEvent = {
     action: actionObj.writeLondonData,
     caller: `action:${request.action.name}`,
+    serviceParams: {
+      comment: 'paris params',
+      body: {
+        path: 'city',
+      },
+    },
     payload: {
-      schema: 'schema:city-data',
-      information: 'Saving data for Paris',
+      comment: 'Saving data for Paris',
       body: {
         city: 'Paris',
         datetime: cityReqPayload.datetime,
@@ -90,9 +99,14 @@ const europeService = async (call: OakCall, request: OakRequestEvent) => {
   const readLondonDataReq: OakRequestEvent = {
     action: actionObj.writeLondonData,
     caller: `action:${request.action.name}`,
+    serviceParams: {
+      comment: 'europe params',
+      body: {
+        path: 'city',
+      },
+    },
     payload: {
-      schema: 'schema:city-data',
-      information: 'Reading data for London',
+      comment: 'Reading data for London',
       body: {
         datetime: cityReqPayload.datetime,
       },
@@ -104,9 +118,14 @@ const europeService = async (call: OakCall, request: OakRequestEvent) => {
   const readParisDataReq: OakRequestEvent = {
     action: actionObj.writeParisData,
     caller: `action:${request.action.name}`,
+    serviceParams: {
+      comment: 'paris params',
+      body: {
+        path: 'city',
+      },
+    },
     payload: {
-      schema: 'schema:city-data',
-      information: 'Reading data for Paris',
+      comment: 'Reading data for Paris',
       body: {
         datetime: cityReqPayload.datetime,
       },
@@ -118,9 +137,14 @@ const europeService = async (call: OakCall, request: OakRequestEvent) => {
   const writeEuropeDataReq: OakRequestEvent = {
     action: actionObj.writeEuropeData,
     caller: `action:${request.action.name}`,
+    serviceParams: {
+      comment: 'paris params',
+      body: {
+        path: 'city',
+      },
+    },
     payload: {
-      schema: 'schema:city-data',
-      information: 'Reading data for Paris',
+      comment: 'Reading data for Paris',
       body: {
         results: [parisPayload, londonPayload],
       },
