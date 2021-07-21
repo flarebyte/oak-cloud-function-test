@@ -19,15 +19,16 @@ export interface OakAction extends OakBase {
   statusList: OakActionStatus[];
 }
 
-export interface OakRequestEventType extends OakBase {
-  action: OakAction;
-  caller: string;
+export interface OakPayload {
+  information: string;
+  schema: string;
+  body: object;
 }
 
 export interface OakRequestEvent {
-  eventType: OakRequestEventType;
-  information: string;
-  body: object;
+  action: OakAction;
+  caller: string;
+  payload: OakPayload;
 }
 
 export interface OakInnerRequestEvent extends OakRequestEvent {
@@ -36,18 +37,11 @@ export interface OakInnerRequestEvent extends OakRequestEvent {
 
 export interface OakResponseEvent {
   status: OakActionStatus;
-  information: string;
-  body: object;
+  payload: OakPayload;
 }
+export type OakCall = (request: OakRequestEvent) => Promise<OakResponseEvent>;
 
-export interface OakUniverse {
-  services: OakService[];
-  statusList: OakActionStatus[];
-  reqEventTypes: OakRequestEventType[];
-  actions: OakAction[];
-}
-
-export type DoAction = (
-  universe: OakUniverse,
+export type OakFunction = (
+  call: OakCall,
   request: OakRequestEvent
 ) => Promise<OakResponseEvent>;

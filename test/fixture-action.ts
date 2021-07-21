@@ -1,6 +1,6 @@
 import { OakAction } from '../src/model';
-import { serviceObj } from './fixture_service';
-import { statusObj } from './fixture_status';
+import { serviceObj } from './fixture-service';
+import { statusObj } from './fixture-status';
 
 const writeLondonData: OakAction = {
   name: 'write-to-london',
@@ -18,17 +18,9 @@ const writeParisData: OakAction = {
   statusList: [statusObj.ok, statusObj.ko],
 };
 
-const writeNewYorkData: OakAction = {
-  name: 'write-to-new-york',
-  description: 'Write New York data to storage',
-  flags: [],
-  service: serviceObj.awsS3,
-  statusList: [statusObj.ok, statusObj.ko],
-};
-
-const writeSummaryData: OakAction = {
-  name: 'write-to-summary',
-  description: 'Write Summary data to storage',
+const writeEuropeData: OakAction = {
+  name: 'write-to-europe',
+  description: 'Write Europe data to storage',
   flags: [],
   service: serviceObj.awsS3,
   statusList: [statusObj.ok, statusObj.ko],
@@ -49,22 +41,13 @@ const readParisData: OakAction = {
   service: serviceObj.awsS3,
   statusList: [statusObj.ok, statusObj.ko],
 };
-const readNewYorkData: OakAction = {
-  name: 'read-from-new-york',
-  description: 'Read New York data from storage',
-  flags: [],
-  service: serviceObj.awsS3,
-  statusList: [statusObj.ok, statusObj.ko],
-};
 
 const actionObj = {
   writeLondonData,
   writeParisData,
-  writeNewYorkData,
-  writeSummaryData,
+  writeEuropeData,
   readLondonData,
   readParisData,
-  readNewYorkData,
 };
 
 const actionList: OakAction[] = Object.values(actionObj);
