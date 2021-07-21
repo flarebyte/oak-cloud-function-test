@@ -8,9 +8,14 @@ describe('Caller Simulator', () => {
     const aa: OakRequestEvent = {
       action: actionObj.readLondonData,
       caller: 'test',
+      serviceParams: {
+        comment: 'some params',
+        body: {
+          path: 'city',
+        },
+      },
       payload: {
-        schema: '',
-        information: 'some info',
+        comment: 'some info',
         body: {
           city: 'London',
         },

@@ -13,8 +13,7 @@ const toResponseEvent = (
   return {
     status,
     payload: {
-      schema: 'status',
-      information: 'Success',
+      comment: 'Success',
       body: {
         message: 'todo',
       },
