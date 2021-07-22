@@ -1,68 +1,8 @@
-import {
-  OakAction,
-  OakEventTransaction,
-  OakRequestEvent,
-  OakSimulatedCall,
-} from '../src/model';
-import {
-  OakSimulator,
-  simulatedCall,
-  sortedTxByIdDesc,
-} from '../src/simulator';
+import { OakAction, OakRequestEvent } from '../src/model';
+import { OakSimulator, simulatedCall } from '../src/simulator';
 import { actionObj } from './fixture-action';
-import { serviceOperationObj } from './fixture-service-op';
-import { statusObj } from './fixture-status';
-
-const s3writeHook: OakSimulatedCall = (
-  _a: OakEventTransaction[],
-  _: OakRequestEvent
-) => {
-  return {
-    status: statusObj.ok,
-    payload: {
-      comment: 'Success',
-      body: {
-        message: 'Saved',
-      },
-    },
-  };
-};
-
-const notFoundResponse = {
-  status: statusObj.notFound,
-  payload: {
-    comment: 'Not found',
-    body: {
-      message: 'document is not found',
-    },
-  },
-};
-const s3readHook: OakSimulatedCall = (
-  transactions: OakEventTransaction[],
-  reqEvent: OakRequestEvent
-) => {
-  const s3Transactions = transactions
-    .filter(
-      t =>
-        t.request.action.serviceOperation.name ===
-        serviceOperationObj.writeToS3.name
-    )
-    .filter(t => t.response.status.name === statusObj.ok.name)
-    .filter(
-      t => t.request.action.resource.name === reqEvent.action.resource.name
-    )
-    .sort(sortedTxByIdDesc);
-
-  return s3Transactions.length === 0
-    ? notFoundResponse
-    : {
-        status: statusObj.ok,
-        payload: {
-          comment: 'Success',
-          body: s3Transactions[0].request.payload.body,
-        },
-      };
-};
+import { coS1ReadOp, coS1WriteOp } from './storage/s1-data';
+import { s1DevHook } from './storage/s1-storage-dev';
 
 const callWriteStorage = (
   action: OakAction,
@@ -97,14 +37,14 @@ const callReadStorage = (action: OakAction): OakRequestEvent => ({
   },
   payload: {
     comment: 'some info',
-    body: {}
+    body: {},
   },
 });
 
 describe('Caller Simulator', () => {
   const simulator = new OakSimulator();
-  simulator.registerServiceOpToCall(serviceOperationObj.writeToS3, s3writeHook);
-  simulator.registerServiceOpToCall(serviceOperationObj.readFromS3, s3readHook);
+  simulator.registerServiceOpToCall(coS1WriteOp, s1DevHook.s1write);
+  simulator.registerServiceOpToCall(coS1ReadOp, s1DevHook.s1read);
 
   const mainSimCaller = simulatedCall(simulator);
   it('simulates function call', async () => {

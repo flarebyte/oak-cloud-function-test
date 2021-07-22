@@ -1,36 +1,36 @@
-import { OakActionStatus } from '../src/model';
+import { OakStatus } from '../src/model';
 
-const ok: OakActionStatus = {
+const ok: OakStatus = {
   name: 'ok',
   description: 'All good',
   flags: [],
 };
 
-const ko: OakActionStatus = {
+const ko: OakStatus = {
   name: 'ko',
   description: 'Went south',
   flags: [],
 };
 
-const notFound: OakActionStatus = {
+const notFound: OakStatus = {
   name: 'not-found',
   description: 'NotFound',
   flags: [],
 };
 
-const green: OakActionStatus = {
+const green: OakStatus = {
   name: 'green',
   description: 'Green',
   flags: [],
 };
 
-const orange: OakActionStatus = {
+const orange: OakStatus = {
   name: 'orange',
   description: 'Orange',
   flags: [],
 };
 
-const red: OakActionStatus = {
+const red: OakStatus = {
   name: 'red',
   description: 'Red',
   flags: [],
@@ -45,6 +45,6 @@ const statusObj = {
   notFound,
 };
 
-const statusList: OakActionStatus[] = Object.values(statusObj);
+const statusList: OakStatus[] = Object.values(statusObj);
 
 export { statusObj, statusList };

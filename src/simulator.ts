@@ -1,9 +1,7 @@
 import {
-  OakActionStatus,
   OakEventTransaction,
   OakEventTransactionFilter,
   OakRequestEvent,
-  OakResource,
   OakResponseEvent,
   OakServiceOperation,
   OakSimulatedCall,
@@ -67,22 +65,6 @@ class OakSimulator {
     return this.eventTransactions.filter(tFilter);
   }
 }
-
-export const byResource = (resource: OakResource) => (
-  transaction: OakEventTransaction
-) => transaction.request.action.resource.name === resource.name;
-export const byStatus = (status: OakActionStatus) => (
-  transaction: OakEventTransaction
-) => transaction.response.status.name === status.name;
-
-export const sortedTxByIdDesc = (
-  a: OakEventTransaction,
-  b: OakEventTransaction
-): number => {
-  if (a.id === b.id) return 0;
-  if (a.id > b.id) return -1;
-  return 1;
-};
 
 const simulatedCall = (simulator: OakSimulator) => async (
   reqEvent: OakRequestEvent

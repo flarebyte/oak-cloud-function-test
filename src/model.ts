@@ -4,7 +4,7 @@ export interface OakBase {
   flags: string[];
 }
 
-export interface OakActionStatus extends OakBase {}
+export interface OakStatus extends OakBase {}
 /**
  * Ex: aws:s3
  */
@@ -12,6 +12,9 @@ export interface OakService extends OakBase {}
 
 export interface OakServiceOperation extends OakBase {
   service: OakService;
+  statusDict: {
+    [name: string]: OakStatus;
+  };
 }
 
 export interface OakResource extends OakBase {}
@@ -23,7 +26,9 @@ export interface OakResource extends OakBase {}
 export interface OakAction extends OakBase {
   serviceOperation: OakServiceOperation;
   resource: OakResource;
-  statusList: OakActionStatus[];
+  statusDict: {
+    [name: string]: OakStatus;
+  };
 }
 
 export interface OakServiceParams {
@@ -44,7 +49,7 @@ export interface OakRequestEvent {
 }
 
 export interface OakResponseEvent {
-  status: OakActionStatus;
+  status: OakStatus;
   payload: OakPayload;
 }
 
