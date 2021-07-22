@@ -43,17 +43,29 @@ export interface OakRequestEvent {
   payload: OakPayload;
 }
 
-export interface OakInnerRequestEvent extends OakRequestEvent {
-  id: number;
-}
-
 export interface OakResponseEvent {
   status: OakActionStatus;
   payload: OakPayload;
 }
+
+export interface OakEventTransaction {
+  id: number;
+  request: OakRequestEvent;
+  response: OakResponseEvent;
+}
+
 export type OakCall = (request: OakRequestEvent) => Promise<OakResponseEvent>;
+
+export type OakSimulatedCall = (
+  transactions: OakEventTransaction[],
+  request: OakRequestEvent
+) => OakResponseEvent;
 
 export type OakFunction = (
   call: OakCall,
   request: OakRequestEvent
 ) => Promise<OakResponseEvent>;
+
+export type OakEventTransactionFilter = (
+  transaction: OakEventTransaction
+) => boolean;

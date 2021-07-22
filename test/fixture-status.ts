@@ -12,6 +12,12 @@ const ko: OakActionStatus = {
   flags: [],
 };
 
+const notFound: OakActionStatus = {
+  name: 'not-found',
+  description: 'NotFound',
+  flags: [],
+};
+
 const green: OakActionStatus = {
   name: 'green',
   description: 'Green',
@@ -36,6 +42,7 @@ const statusObj = {
   green,
   orange,
   red,
+  notFound,
 };
 
 const statusList: OakActionStatus[] = Object.values(statusObj);

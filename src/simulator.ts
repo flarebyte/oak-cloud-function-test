@@ -1,9 +1,12 @@
 import {
-  OakAction,
   OakActionStatus,
-  OakInnerRequestEvent,
+  OakEventTransaction,
+  OakEventTransactionFilter,
   OakRequestEvent,
+  OakResource,
   OakResponseEvent,
+  OakServiceOperation,
+  OakSimulatedCall,
 } from './model';
 
 function cloneValue<A>(value: A): A {
@@ -11,47 +14,85 @@ function cloneValue<A>(value: A): A {
   const result: A = JSON.parse(jsonstr);
   return result;
 }
+interface OakSimulatedServiceOpToCall {
+  serviceOperation: OakServiceOperation;
+  simulatedCall: OakSimulatedCall;
+}
 
-class OakEventLog {
-  reqEvents: OakInnerRequestEvent[];
+class OakSimulator {
+  eventTransactions: OakEventTransaction[];
+  serviceOpToCall: OakSimulatedServiceOpToCall[];
+
   constructor() {
-    this.reqEvents = [];
+    this.eventTransactions = [];
+    this.serviceOpToCall = [];
   }
   reset() {
-    this.reqEvents = [];
+    this.eventTransactions = [];
   }
 
-  addReqEvent(reqEvent: OakRequestEvent) {
-    const event = { id: this.reqEvents.length, ...reqEvent };
-    this.reqEvents.push(cloneValue(event));
+  addTransaction(request: OakRequestEvent, response: OakResponseEvent) {
+    const transaction = {
+      id: this.eventTransactions.length,
+      request,
+      response,
+    };
+    this.eventTransactions.push(cloneValue(transaction));
+  }
+
+  registerServiceOpToCall(
+    serviceOperation: OakServiceOperation,
+    simulatedCall: OakSimulatedCall
+  ) {
+    this.serviceOpToCall.push({ serviceOperation, simulatedCall });
   }
 
   toInfo() {
-    return JSON.stringify(this.reqEvents, null, 2);
+    return JSON.stringify(this.eventTransactions, null, 2);
+  }
+
+  serviceCall(serviceOperation: OakServiceOperation, request: OakRequestEvent) {
+    const mapping = this.serviceOpToCall.find(
+      m => m.serviceOperation.name === serviceOperation.name
+    );
+    if (!mapping)
+      throw Error(`No hook for service operation:  ${serviceOperation.name}`);
+    const result = mapping.simulatedCall(this.eventTransactions, request);
+    return result;
+  }
+
+  filterTransactions(
+    tFilter: OakEventTransactionFilter
+  ): OakEventTransaction[] {
+    return this.eventTransactions.filter(tFilter);
   }
 }
 
-const toResponseEvent = (
-  _: OakAction,
-  status: OakActionStatus
-): OakResponseEvent => {
-  return {
-    status,
-    payload: {
-      comment: 'Success',
-      body: {
-        message: 'todo',
-      },
-    },
-  };
-};
-const simCaller = (eventsLog: OakEventLog) => async (
-  reqEvent: OakRequestEvent
-) => {
-  eventsLog.addReqEvent(reqEvent);
-  return Promise.resolve(
-    toResponseEvent(reqEvent.action, reqEvent.action.statusList[0])
-  );
+export const byResource = (resource: OakResource) => (
+  transaction: OakEventTransaction
+) => transaction.request.action.resource.name === resource.name;
+export const byStatus = (status: OakActionStatus) => (
+  transaction: OakEventTransaction
+) => transaction.response.status.name === status.name;
+
+export const sortedTxByIdDesc = (
+  a: OakEventTransaction,
+  b: OakEventTransaction
+): number => {
+  if (a.id === b.id) return 0;
+  if (a.id > b.id) return -1;
+  return 1;
 };
 
-export { simCaller, OakEventLog };
+const simulatedCall = (simulator: OakSimulator) => async (
+  reqEvent: OakRequestEvent
+) => {
+  const respEvent = simulator.serviceCall(
+    reqEvent.action.serviceOperation,
+    reqEvent
+  );
+  simulator.addTransaction(reqEvent, respEvent);
+  return Promise.resolve(respEvent);
+};
+
+export { simulatedCall, OakSimulator };
