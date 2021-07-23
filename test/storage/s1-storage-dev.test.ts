@@ -37,6 +37,17 @@ describe('S1 Storage', () => {
       expect(resp1.status.name).toEqual(coS1Status.ok.name);
       expect(resp2.status.name).toEqual(coS1Status.ok.name);
     });
+
+    it('should return bad request if parameters are incorrect', () => {
+      const tx = createEmptyTx();
+      const req: OakRequestEvent = {
+        ...writeToLondonRequestTemplate,
+        serviceParams: {},
+      };
+
+      const resp = s1DevHook.write(tx, req);
+      expect(resp.status.name).toEqual(coS1Status.badRequest.name);
+    });
   });
 
   describe('Test read', () => {

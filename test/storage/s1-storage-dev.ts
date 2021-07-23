@@ -5,19 +5,30 @@ import {
 } from '../../src/model';
 import { isSameName, sortedTxByIdDesc } from '../../src/map-red';
 import { coS1Status, coS1WriteOp } from './s1-data';
+import { validateParams } from './s1-storage-validator';
 
 const write: OakSimulatedCall = (
   _a: OakEventTransaction[],
-  _b: OakRequestEvent
+  req: OakRequestEvent
 ) => {
-  return {
-    status: coS1Status.ok,
-    comment: 'Success',
-    payload: {
-      message: 'Saved',
-    },
-    flags: [],
-  };
+  const validErrs = validateParams(req.serviceParams);
+  return validErrs.length === 0
+    ? {
+        status: coS1Status.ok,
+        comment: 'Success',
+        payload: {
+          message: 'Saved',
+        },
+        flags: [],
+      }
+    : {
+        status: coS1Status.badRequest,
+        comment: 'Bad request',
+        payload: {
+          message: 'Not Saved',
+        },
+        flags: [],
+      };
 };
 
 const notFoundResponse = {

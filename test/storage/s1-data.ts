@@ -24,6 +24,12 @@ const notFound: OakStatus = {
   flags: [],
 };
 
+const badRequest: OakStatus = {
+  name: 'bad-request',
+  description: 'BadRequest',
+  flags: [],
+};
+
 const coS1ReadOp: OakServiceOperation = {
   name: 'company:s1:read',
   service: coS1Service,
@@ -51,6 +57,7 @@ const coS1Status = {
   ok,
   ko,
   notFound,
+  badRequest,
 };
 
 export { coS1Service, coS1ReadOp, coS1WriteOp, coS1Status };
