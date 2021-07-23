@@ -31,26 +31,20 @@ export interface OakAction extends OakBase {
   };
 }
 
-export interface OakServiceParams {
+export interface OakEvent {
   comment: string;
-  body: object;
+  payload: object;
+  flags: string[];
 }
 
-export interface OakPayload {
-  comment: string;
-  body: object;
-}
-
-export interface OakRequestEvent {
+export interface OakRequestEvent extends OakEvent {
   action: OakAction;
   caller: string;
-  serviceParams: OakServiceParams;
-  payload: OakPayload;
+  serviceParams: object;
 }
 
 export interface OakResponseEvent {
   status: OakStatus;
-  payload: OakPayload;
 }
 
 export interface OakEventTransaction {

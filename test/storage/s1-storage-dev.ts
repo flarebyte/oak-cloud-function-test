@@ -6,31 +6,29 @@ import {
 import { isSameName, sortedTxByIdDesc } from '../../src/map-red';
 import { coS1Status, coS1WriteOp } from './s1-data';
 
-const s1write: OakSimulatedCall = (
+const write: OakSimulatedCall = (
   _a: OakEventTransaction[],
   _b: OakRequestEvent
 ) => {
   return {
     status: coS1Status.ok,
+    comment: 'Success',
     payload: {
-      comment: 'Success',
-      body: {
-        message: 'Saved',
-      },
+      message: 'Saved',
     },
+    flags: [],
   };
 };
 
 const notFoundResponse = {
   status: coS1Status.notFound,
+  comment: 'Not found',
   payload: {
-    comment: 'Not found',
-    body: {
-      message: 'document is not found',
-    },
+    message: 'document is not found',
   },
+  flags: [],
 };
-const s1read: OakSimulatedCall = (
+const read: OakSimulatedCall = (
   transactions: OakEventTransaction[],
   reqEvent: OakRequestEvent
 ) => {
@@ -46,16 +44,15 @@ const s1read: OakSimulatedCall = (
     ? notFoundResponse
     : {
         status: coS1Status.ok,
-        payload: {
-          comment: 'Success',
-          body: s1Transactions[0].request.payload.body,
-        },
+        comment: 'Success',
+        payload: s1Transactions[0].request.payload,
+        flags: [],
       };
 };
 
 const s1DevHook = {
-  s1write,
-  s1read,
+  write,
+  read,
 };
 
 export { s1DevHook };

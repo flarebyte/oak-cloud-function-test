@@ -11,40 +11,32 @@ const callWriteStorage = (
 ): OakRequestEvent => ({
   action,
   caller: 'test',
+  comment: 'writing to city',
+  flags: [],
   serviceParams: {
-    comment: 'some params',
-    body: {
-      path: 'city',
-    },
+    path: 'city',
   },
   payload: {
-    comment: 'some info',
-    body: {
-      city,
-      population,
-    },
+    city,
+    population,
   },
 });
 
 const callReadStorage = (action: OakAction): OakRequestEvent => ({
   action,
   caller: 'test',
+  comment: 'read from city',
+  flags: [],
   serviceParams: {
-    comment: 'some params',
-    body: {
-      path: 'city',
-    },
+    path: 'city',
   },
-  payload: {
-    comment: 'some info',
-    body: {},
-  },
+  payload: {},
 });
 
 describe('Caller Simulator', () => {
   const simulator = new OakSimulator();
-  simulator.registerServiceOpToCall(coS1WriteOp, s1DevHook.s1write);
-  simulator.registerServiceOpToCall(coS1ReadOp, s1DevHook.s1read);
+  simulator.registerServiceOpToCall(coS1WriteOp, s1DevHook.write);
+  simulator.registerServiceOpToCall(coS1ReadOp, s1DevHook.read);
 
   const mainSimCaller = simulatedCall(simulator);
   it('simulates function call', async () => {
