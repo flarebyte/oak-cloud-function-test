@@ -47,6 +47,6 @@ describe('Caller Simulator', () => {
     const londonContent = await mainSimCaller(
       callReadStorage(actionObj.readLondonData)
     );
-    console.log(londonContent);
+    expect(londonContent).toBeDefined();
   });
 });
