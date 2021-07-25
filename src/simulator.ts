@@ -70,7 +70,7 @@ const simulatedCall = (simulator: OakSimulator) => async (
   reqEvent: OakRequestEvent
 ) => {
   const respEvent = simulator.serviceCall(
-    reqEvent.action.serviceOperation,
+    reqEvent.businessOperation.serviceOperation,
     reqEvent
   );
   simulator.addTransaction(reqEvent, respEvent);

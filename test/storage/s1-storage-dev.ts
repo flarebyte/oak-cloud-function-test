@@ -61,11 +61,17 @@ const read: OakSimulatedCall = (
 ) => {
   const s1Transactions = transactions
     .filter(t =>
-      isSameName(t.request.action.serviceOperation, coS1.serviceOpDict.write)
+      isSameName(
+        t.request.businessOperation.serviceOperation,
+        coS1.serviceOpDict.write
+      )
     )
     .filter(t => isSameName(t.response.status, coS1.statusDict.ok))
     .filter(t =>
-      isSameName(t.request.action.resource, reqEvent.action.resource)
+      isSameName(
+        t.request.businessOperation.resource,
+        reqEvent.businessOperation.resource
+      )
     )
     .sort(sortedTxByIdDesc);
 

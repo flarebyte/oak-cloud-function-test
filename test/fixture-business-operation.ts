@@ -1,8 +1,8 @@
-import { OakAction } from '../src/model';
+import { OakBusinessOperation } from '../src/model';
 import { resourceObj } from './fixture-resource';
 import { coS1 } from './storage/s1-data';
 
-const writeLondonData: OakAction = {
+const writeLondonData: OakBusinessOperation = {
   name: 'write-to-london',
   description: 'Write London data to storage',
   flags: [],
@@ -10,7 +10,7 @@ const writeLondonData: OakAction = {
   resource: resourceObj.s3London,
 };
 
-const writeParisData: OakAction = {
+const writeParisData: OakBusinessOperation = {
   name: 'write-to-paris',
   description: 'Write Paris data to storage',
   flags: [],
@@ -18,7 +18,7 @@ const writeParisData: OakAction = {
   resource: resourceObj.s3Paris,
 };
 
-const writeEuropeData: OakAction = {
+const writeEuropeData: OakBusinessOperation = {
   name: 'write-to-europe',
   description: 'Write Europe data to storage',
   flags: [],
@@ -26,7 +26,7 @@ const writeEuropeData: OakAction = {
   resource: resourceObj.s3Europe,
 };
 
-const readLondonData: OakAction = {
+const readLondonData: OakBusinessOperation = {
   name: 'read-from-london',
   description: 'Read London data from storage',
   flags: [],
@@ -34,7 +34,7 @@ const readLondonData: OakAction = {
   resource: resourceObj.s3London,
 };
 
-const readParisData: OakAction = {
+const readParisData: OakBusinessOperation = {
   name: 'read-from-paris',
   description: 'Read Paris data from storage',
   flags: [],
@@ -42,7 +42,7 @@ const readParisData: OakAction = {
   resource: resourceObj.s3Paris,
 };
 
-const actionObj = {
+const bizOperationObj = {
   writeLondonData,
   writeParisData,
   writeEuropeData,
@@ -50,6 +50,6 @@ const actionObj = {
   readParisData,
 };
 
-const actionList: OakAction[] = Object.values(actionObj);
+const bizOperationList: OakBusinessOperation[] = Object.values(bizOperationObj);
 
-export { actionObj, actionList };
+export { bizOperationObj, bizOperationList };

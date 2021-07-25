@@ -1,5 +1,5 @@
 import { OakRequestEvent } from '../../src/model';
-import { actionObj } from '../fixture-action';
+import { bizOperationObj } from '../fixture-business-operation';
 import { coS1 } from './s1-data';
 import { s1DevHook } from './s1-storage-dev';
 import { createEmptyTx } from '../../src/factory';
@@ -10,7 +10,7 @@ const writeToLondonRequestTemplate = (
   path: string,
   value: number
 ): OakRequestEvent => ({
-  action: actionObj.writeLondonData,
+  businessOperation: bizOperationObj.writeLondonData,
   caller: 'test',
   comment: 'write to london',
   serviceParams: createS1Params(path),
@@ -22,7 +22,7 @@ const writeToLondonRequestTemplate = (
 });
 
 const readFromLondonRequestTemplate = (path: string): OakRequestEvent => ({
-  action: actionObj.readLondonData,
+  businessOperation: bizOperationObj.readLondonData,
   caller: 'test',
   comment: 'read to london',
   serviceParams: createS1Params(path),

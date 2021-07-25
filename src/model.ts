@@ -23,7 +23,7 @@ export interface OakResource extends OakBase {}
  * Configuration of a service
  * @example read-from-s3
  */
-export interface OakAction extends OakBase {
+export interface OakBusinessOperation extends OakBase {
   serviceOperation: OakServiceOperation;
   resource: OakResource;
 }
@@ -35,7 +35,7 @@ export interface OakEvent {
 }
 
 export interface OakRequestEvent extends OakEvent {
-  action: OakAction;
+  businessOperation: OakBusinessOperation;
   caller: string;
   serviceParams: object;
   systemFlags: string[];
