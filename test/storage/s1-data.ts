@@ -1,6 +1,11 @@
-import { OakService, OakServiceOperation, OakStatus } from '../../src/model';
+import {
+  OakService,
+  OakServiceData,
+  OakServiceOperation,
+  OakStatus,
+} from '../../src/model';
 
-const coS1Service: OakService = {
+const service: OakService = {
   name: 'company:s1',
   description: 'Cloud storage',
   flags: [],
@@ -30,9 +35,15 @@ const badRequest: OakStatus = {
   flags: [],
 };
 
-const coS1ReadOp: OakServiceOperation = {
+const circuitBreaking: OakStatus = {
+  name: 'circuit-breaking',
+  description: 'circuit-breaking',
+  flags: [],
+};
+
+const read: OakServiceOperation = {
   name: 'company:s1:read',
-  service: coS1Service,
+  service,
   description: 'Read from Company S1',
   flags: [],
   statusDict: {
@@ -42,9 +53,9 @@ const coS1ReadOp: OakServiceOperation = {
   },
 };
 
-const coS1WriteOp: OakServiceOperation = {
+const write: OakServiceOperation = {
   name: 'company:s1:write',
-  service: coS1Service,
+  service,
   description: 'Write to Company S1',
   flags: [],
   statusDict: {
@@ -53,11 +64,25 @@ const coS1WriteOp: OakServiceOperation = {
   },
 };
 
-const coS1Status = {
-  ok,
-  ko,
-  notFound,
-  badRequest,
+const coS1: OakServiceData = {
+  name: 'coS1',
+  description: 'Service to read and write to storage',
+  flags: [],
+  service,
+  serviceOpDict: {
+    read,
+    write,
+  },
+  statusDict: {
+    ok,
+    ko,
+    notFound,
+    badRequest,
+    circuitBreaking,
+  },
+  systemFlagsDict: {
+    circuitBreaking: 'circuit-breaking',
+  },
 };
 
-export { coS1Service, coS1ReadOp, coS1WriteOp, coS1Status };
+export { coS1 };

@@ -4,35 +4,51 @@ import {
   OakSimulatedCall,
 } from '../../src/model';
 import { isSameName, sortedTxByIdDesc } from '../../src/map-red';
-import { coS1Status, coS1WriteOp } from './s1-data';
+import { coS1 } from './s1-data';
 import { validateParams } from './s1-storage-validator';
+
+const version = 'v1.1.1';
+const circuitBreakingResponse = {
+  status: coS1.statusDict.circuitBreaking,
+  comment: 'Circuit breaking',
+  payload: {
+    message: 'Circuit breaking',
+    version,
+  },
+  flags: [],
+};
 
 const write: OakSimulatedCall = (
   _a: OakEventTransaction[],
   req: OakRequestEvent
 ) => {
+  if (req.systemFlags.includes(coS1.systemFlagsDict.circuitBreaking)) {
+    return circuitBreakingResponse;
+  }
   const validErrs = validateParams(req.serviceParams);
   return validErrs.length === 0
     ? {
-        status: coS1Status.ok,
+        status: coS1.statusDict.ok,
         comment: 'Success',
         payload: {
           message: 'Saved',
+          version,
         },
         flags: [],
       }
     : {
-        status: coS1Status.badRequest,
+        status: coS1.statusDict.badRequest,
         comment: 'Bad request',
         payload: {
           message: 'Not Saved',
+          version,
         },
         flags: [],
       };
 };
 
 const notFoundResponse = {
-  status: coS1Status.notFound,
+  status: coS1.statusDict.notFound,
   comment: 'Not found',
   payload: {
     message: 'document is not found',
@@ -44,8 +60,10 @@ const read: OakSimulatedCall = (
   reqEvent: OakRequestEvent
 ) => {
   const s1Transactions = transactions
-    .filter(t => isSameName(t.request.action, coS1WriteOp))
-    .filter(t => isSameName(t.response.status, coS1Status.ok))
+    .filter(t =>
+      isSameName(t.request.action.serviceOperation, coS1.serviceOpDict.write)
+    )
+    .filter(t => isSameName(t.response.status, coS1.statusDict.ok))
     .filter(t =>
       isSameName(t.request.action.resource, reqEvent.action.resource)
     )
@@ -54,7 +72,7 @@ const read: OakSimulatedCall = (
   return s1Transactions.length === 0
     ? notFoundResponse
     : {
-        status: coS1Status.ok,
+        status: coS1.statusDict.ok,
         comment: 'Success',
         payload: s1Transactions[0].request.payload,
         flags: [],

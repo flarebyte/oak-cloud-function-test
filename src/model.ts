@@ -26,9 +26,6 @@ export interface OakResource extends OakBase {}
 export interface OakAction extends OakBase {
   serviceOperation: OakServiceOperation;
   resource: OakResource;
-  statusDict: {
-    [name: string]: OakStatus;
-  };
 }
 
 export interface OakEvent {
@@ -41,9 +38,10 @@ export interface OakRequestEvent extends OakEvent {
   action: OakAction;
   caller: string;
   serviceParams: object;
+  systemFlags: string[];
 }
 
-export interface OakResponseEvent {
+export interface OakResponseEvent extends OakEvent {
   status: OakStatus;
 }
 
@@ -51,6 +49,19 @@ export interface OakEventTransaction {
   id: number;
   request: OakRequestEvent;
   response: OakResponseEvent;
+}
+
+export interface OakServiceData extends OakBase {
+  service: OakService;
+  serviceOpDict: {
+    [name: string]: OakServiceOperation;
+  };
+  statusDict: {
+    [name: string]: OakStatus;
+  };
+  systemFlagsDict: {
+    [name: string]: string;
+  };
 }
 
 export type OakCall = (request: OakRequestEvent) => Promise<OakResponseEvent>;
