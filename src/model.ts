@@ -28,6 +28,16 @@ export interface OakBusinessOperation extends OakBase {
   resource: OakResource;
 }
 
+export interface OakAction extends OakBase {
+  statusDict: {
+    [name: string]: OakStatus;
+  };
+
+  systemFlagsDict: {
+    [name: string]: string;
+  };
+}
+
 export interface OakEvent {
   comment: string;
   payload: object;
@@ -45,9 +55,22 @@ export interface OakResponseEvent extends OakEvent {
   status: OakStatus;
 }
 
+export interface OakActionRequestEvent extends OakEvent {
+  action: OakAction;
+  caller: string;
+  params: object;
+  systemFlags: string[];
+}
+
 export interface OakEventTransaction {
   id: number;
   request: OakRequestEvent;
+  response: OakResponseEvent;
+}
+
+export interface OakActionEventTransaction {
+  id: number;
+  request: OakActionRequestEvent;
   response: OakResponseEvent;
 }
 
@@ -66,15 +89,21 @@ export interface OakServiceData extends OakBase {
 
 export type OakCall = (request: OakRequestEvent) => Promise<OakResponseEvent>;
 
+export interface OakActionCompanion {
+  call: {
+    [name: string]: OakCall;
+  };
+}
+
+export type OakActionCall = (
+  companion: OakActionCompanion,
+  request: OakActionRequestEvent
+) => Promise<OakResponseEvent>;
+
 export type OakSimulatedCall = (
   transactions: OakEventTransaction[],
   request: OakRequestEvent
 ) => OakResponseEvent;
-
-export type OakFunction = (
-  call: OakCall,
-  request: OakRequestEvent
-) => Promise<OakResponseEvent>;
 
 export type OakEventTransactionFilter = (
   transaction: OakEventTransaction
