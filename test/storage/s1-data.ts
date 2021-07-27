@@ -5,33 +5,13 @@ import {
   OakStatus,
 } from '../../src/model';
 
+import { statusDict } from '../../src/status-data';
+
+const { ok, notFound, badRequest, internalServiceError } = statusDict;
+
 const service: OakService = {
   name: 'company:s1',
   description: 'Cloud storage',
-  flags: [],
-};
-
-const ok: OakStatus = {
-  name: 'ok',
-  description: 'All good',
-  flags: [],
-};
-
-const ko: OakStatus = {
-  name: 'ko',
-  description: 'Went south',
-  flags: [],
-};
-
-const notFound: OakStatus = {
-  name: 'not-found',
-  description: 'NotFound',
-  flags: [],
-};
-
-const badRequest: OakStatus = {
-  name: 'bad-request',
-  description: 'BadRequest',
   flags: [],
 };
 
@@ -48,7 +28,6 @@ const read: OakServiceOperation = {
   flags: [],
   statusDict: {
     ok,
-    ko,
     notFound,
   },
 };
@@ -60,7 +39,7 @@ const write: OakServiceOperation = {
   flags: [],
   statusDict: {
     ok,
-    ko,
+    internalServiceError,
   },
 };
 
@@ -75,7 +54,7 @@ const coS1: OakServiceData = {
   },
   statusDict: {
     ok,
-    ko,
+    internalServiceError,
     notFound,
     badRequest,
     circuitBreaking,

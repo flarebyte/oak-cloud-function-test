@@ -1,16 +1,7 @@
-import { OakAction, OakStatus } from '../../src/model';
+import { OakAction } from '../../src/model';
+import { statusDict } from '../../src/status-data';
 
-const ok: OakStatus = {
-  name: 'ok',
-  description: 'All good',
-  flags: [],
-};
-
-const ko: OakStatus = {
-  name: 'ko',
-  description: 'Went south',
-  flags: [],
-};
+const { ok, internalServiceError } = statusDict;
 
 const aggregateDataAction: OakAction = {
   name: 'alpha-aggregate-europe',
@@ -18,7 +9,7 @@ const aggregateDataAction: OakAction = {
   flags: [],
   statusDict: {
     ok,
-    ko,
+    internalServiceError,
   },
   systemFlagsDict: {
     circuitBreaking: 'circuit-breaking',
