@@ -7,13 +7,11 @@ import { isSameName, sortedTxByIdDesc } from '../../src/map-red';
 import { coS1 } from './s1-data';
 import { validateParams } from './s1-storage-validator';
 
-const version = 'v1.1.1';
 const circuitBreakingResponse = {
   status: coS1.statusDict.circuitBreaking,
   comment: 'Circuit breaking',
   payload: {
     message: 'Circuit breaking',
-    version,
   },
   flags: [],
 };
@@ -32,7 +30,6 @@ const write: OakSimulatedCall = (
         comment: 'Success',
         payload: {
           message: 'Saved',
-          version,
         },
         flags: [],
       }
@@ -41,7 +38,6 @@ const write: OakSimulatedCall = (
         comment: 'Bad request',
         payload: {
           message: 'Not Saved',
-          version,
         },
         flags: [],
       };

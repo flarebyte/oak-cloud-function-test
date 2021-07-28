@@ -54,14 +54,11 @@ const sumCityPayload = (a: CityPayload, b: CityPayload): CityPayload => ({
   data: [a.data.reduce((x, y) => x + y), b.data.reduce((x, y) => x + y)],
 });
 
-const version = 'v2.1.1';
-
 const koResponse = {
   status: aggregateDataAction.statusDict.ko,
   comment: 'Failure',
   payload: {
     message: 'Failure',
-    version,
   },
   flags: [],
 };

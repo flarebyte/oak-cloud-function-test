@@ -12,6 +12,7 @@ export interface OakService extends OakBase {}
 
 export interface OakServiceOperation extends OakBase {
   service: OakService;
+  version: string;
   statusDict: {
     [name: string]: OakStatus;
   };
@@ -29,6 +30,7 @@ export interface OakBusinessOperation extends OakBase {
 }
 
 export interface OakAction extends OakBase {
+  version: string;
   statusDict: {
     [name: string]: OakStatus;
   };
@@ -76,6 +78,7 @@ export interface OakActionEventTransaction {
 
 export interface OakServiceData extends OakBase {
   service: OakService;
+  version: string;
   serviceOpDict: {
     [name: string]: OakServiceOperation;
   };
