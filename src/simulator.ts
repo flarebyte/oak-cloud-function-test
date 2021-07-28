@@ -6,6 +6,7 @@ import {
   OakServiceOperation,
   OakSimulatedCall,
 } from './model';
+import { summarizeServiceOpTransaction } from './simulator-summarizer';
 
 function cloneValue<A>(value: A): A {
   const jsonstr = JSON.stringify(value);
@@ -45,8 +46,16 @@ class OakSimulator {
     this.serviceOpToCall.push({ serviceOperation, simulatedCall });
   }
 
-  toInfo() {
+  toFullInfo() {
     return JSON.stringify(this.eventTransactions, null, 2);
+  }
+
+  toInfo() {
+    return JSON.stringify(
+      this.eventTransactions.map(summarizeServiceOpTransaction),
+      null,
+      2
+    );
   }
 
   serviceCall(serviceOperation: OakServiceOperation, request: OakRequestEvent) {
