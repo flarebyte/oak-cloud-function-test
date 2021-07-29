@@ -11,6 +11,7 @@ export interface OakStatus extends OakBase {}
 export interface OakService extends OakBase {}
 
 export interface OakServiceOperation extends OakBase {
+  functionName: string;
   service: OakService;
   version: string;
   statusDict: {
@@ -102,6 +103,13 @@ export type OakActionCall = (
   companion: OakActionCompanion,
   request: OakActionRequestEvent
 ) => Promise<OakResponseEvent>;
+
+export interface OakFunctionCompanion {
+  actionCompanion: OakActionCompanion;
+  call: {
+    [name: string]: OakActionCall;
+  };
+}
 
 export type OakSimulatedCall = (
   transactions: OakEventTransaction[],

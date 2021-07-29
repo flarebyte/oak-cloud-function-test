@@ -57,6 +57,6 @@ describe('Alpha Aggregate', () => {
     );
     const resp = await aggregateAction(alphaCompanion, sumRequest);
     expect(resp.status.name).toEqual('ok');
-    expect(simulator.toInfo()).toMatchSnapshot()
+    expect(simulator.toInfo()).toMatchSnapshot();
   });
 });

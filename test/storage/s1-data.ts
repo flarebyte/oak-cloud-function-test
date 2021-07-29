@@ -24,6 +24,7 @@ const circuitBreaking: OakStatus = {
 
 const read: OakServiceOperation = {
   name: 'company:s1:read',
+  functionName: 'readS1',
   version,
   service,
   description: 'Read from Company S1',
@@ -36,6 +37,7 @@ const read: OakServiceOperation = {
 
 const write: OakServiceOperation = {
   name: 'company:s1:write',
+  functionName: 'writeS1',
   version,
   service,
   description: 'Write to Company S1',
