@@ -91,15 +91,28 @@ export interface OakServiceData extends OakBase {
   };
 }
 
-export type OakCall = (request: OakRequestEvent) => Promise<OakResponseEvent>;
+export interface OakEngineContext {
+  transactions: OakEventTransaction[];
+  systemFlags: string[];
+}
+
+export type OakCall = (
+  context: OakEngineContext,
+  request: OakRequestEvent
+) => OakResponseEvent;
 
 export interface OakActionCompanion {
   call: {
     [name: string]: OakCall;
   };
+
+  callByServiceOp: {
+    [name: string]: OakCall;
+  };
 }
 
 export type OakActionCall = (
+  context: OakEngineContext,
   companion: OakActionCompanion,
   request: OakActionRequestEvent
 ) => Promise<OakResponseEvent>;
@@ -109,13 +122,10 @@ export interface OakFunctionCompanion {
   call: {
     [name: string]: OakActionCall;
   };
+  callByAction: {
+    [name: string]: OakActionCall;
+  };
 }
-
-export type OakSimulatedCall = (
-  transactions: OakEventTransaction[],
-  request: OakRequestEvent
-) => OakResponseEvent;
-
 export type OakEventTransactionFilter = (
   transaction: OakEventTransaction
 ) => boolean;
