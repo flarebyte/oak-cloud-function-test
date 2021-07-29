@@ -1,11 +1,14 @@
 import {
-  OakEventTransaction,
+  OakActionCompanion,
+  OakCall,
+  OakEngineContext,
   OakRequestEvent,
-  OakSimulatedCall,
+  OakResponseEvent,
 } from '../../src/model';
 import { isSameName, sortedTxByIdDesc } from '../../src/map-red';
 import { coS1 } from './s1-data';
 import { validateParams } from './s1-storage-validator';
+import { buildActionCompanion } from '../../src/companion-utils';
 
 const circuitBreakingResponse = {
   status: coS1.statusDict.circuitBreaking,
@@ -16,31 +19,31 @@ const circuitBreakingResponse = {
   flags: [],
 };
 
-const write: OakSimulatedCall = (
-  _a: OakEventTransaction[],
-  req: OakRequestEvent
-) => {
+const writeSuccess: OakResponseEvent = {
+  status: coS1.statusDict.ok,
+  comment: 'Success',
+  payload: {
+    message: 'Saved',
+  },
+  flags: [],
+};
+const writeBadRequest: OakResponseEvent = {
+  status: coS1.statusDict.badRequest,
+  comment: 'Bad request',
+  payload: {
+    message: 'Not Saved',
+  },
+  flags: [],
+};
+
+const write: OakCall = (_c: OakEngineContext, req: OakRequestEvent) => {
   if (req.systemFlags.includes(coS1.systemFlagsDict.circuitBreaking)) {
-    return circuitBreakingResponse;
+    return Promise.resolve(circuitBreakingResponse);
   }
   const validErrs = validateParams(req.serviceParams);
   return validErrs.length === 0
-    ? {
-        status: coS1.statusDict.ok,
-        comment: 'Success',
-        payload: {
-          message: 'Saved',
-        },
-        flags: [],
-      }
-    : {
-        status: coS1.statusDict.badRequest,
-        comment: 'Bad request',
-        payload: {
-          message: 'Not Saved',
-        },
-        flags: [],
-      };
+    ? Promise.resolve(writeSuccess)
+    : Promise.resolve(writeBadRequest);
 };
 
 const notFoundResponse = {
@@ -51,11 +54,8 @@ const notFoundResponse = {
   },
   flags: [],
 };
-const read: OakSimulatedCall = (
-  transactions: OakEventTransaction[],
-  reqEvent: OakRequestEvent
-) => {
-  const s1Transactions = transactions
+const read: OakCall = (ctx: OakEngineContext, reqEvent: OakRequestEvent) => {
+  const s1Transactions = ctx.transactions
     .filter(t =>
       isSameName(
         t.request.businessOperation.serviceOperation,
@@ -72,18 +72,24 @@ const read: OakSimulatedCall = (
     .sort(sortedTxByIdDesc);
 
   return s1Transactions.length === 0
-    ? notFoundResponse
-    : {
+    ? Promise.resolve(notFoundResponse)
+    : Promise.resolve({
         status: coS1.statusDict.ok,
         comment: 'Success',
         payload: s1Transactions[0].request.payload,
         flags: [],
-      };
+      });
 };
 
-const s1DevHook = {
-  write,
-  read,
-};
+const s1DevCompanion: OakActionCompanion = buildActionCompanion([
+  {
+    so: coS1.serviceOpDict.read,
+    call: read,
+  },
+  {
+    so: coS1.serviceOpDict.write,
+    call: write,
+  },
+]);
 
-export { s1DevHook };
+export { s1DevCompanion };

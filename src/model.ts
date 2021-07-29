@@ -99,7 +99,7 @@ export interface OakEngineContext {
 export type OakCall = (
   context: OakEngineContext,
   request: OakRequestEvent
-) => OakResponseEvent;
+) => Promise<OakResponseEvent>;
 
 export interface OakActionCompanion {
   call: {
@@ -126,6 +126,14 @@ export interface OakFunctionCompanion {
     [name: string]: OakActionCall;
   };
 }
+
+export type OakCallWrapper = (call: OakCall) => OakCall;
+
 export type OakEventTransactionFilter = (
   transaction: OakEventTransaction
 ) => boolean;
+
+export interface OakServiceOpToCall {
+  so: OakServiceOperation;
+  call: OakCall;
+}

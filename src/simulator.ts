@@ -1,20 +1,24 @@
-import { mergeActionCompanions } from './companion-utils';
+import {
+  mergeActionCompanions,
+  transformActionCompanion,
+} from './companion-utils';
 import {
   OakRequestEvent,
   OakResponseEvent,
   OakActionCompanion,
   OakEngineContext,
   OakCall,
+  OakCallWrapper,
 } from './model';
 import { summarizeServiceOpTransaction } from './simulator-summarizer';
 
 function cloneValue<A>(value: A): A {
-  const jsonstr = JSON.stringify(value);
-  const result: A = JSON.parse(jsonstr);
+  const jsonStr = JSON.stringify(value);
+  const result: A = JSON.parse(jsonStr);
   return result;
 }
 
-class OakSimulator {
+export class OakSimulator {
   context: OakEngineContext;
   actionCompanion: OakActionCompanion;
 
@@ -42,7 +46,16 @@ class OakSimulator {
   }
 
   registerActionCompanions(companions: OakActionCompanion[]) {
-    this.actionCompanion = mergeActionCompanions(companions);
+    const oneCompanion = mergeActionCompanions(companions);
+    const wrapper: OakCallWrapper = (wrapped: OakCall) => async (
+      context: OakEngineContext,
+      request: OakRequestEvent
+    ): Promise<OakResponseEvent> => {
+      const respEvent = await wrapped(context, request);
+      this.addTransaction(request, respEvent);
+      return respEvent;
+    };
+    this.actionCompanion = transformActionCompanion(wrapper)(oneCompanion);
   }
 
   toFullInfo() {
@@ -57,19 +70,3 @@ class OakSimulator {
     );
   }
 }
-
-const simulatedCall = (simulator: OakSimulator, wrapped: OakCall) => async (
-  context: OakEngineContext,
-  request: OakRequestEvent
-): Promise<OakResponseEvent> => {
-  const respEvent = await wrapped(context, request);
-  simulator.addTransaction(request, respEvent);
-  return respEvent;
-};
-
-const toSimulatedActionCompanion = (
-  companion: OakActionCompanion
-): OakActionCompanion => ({
-  call: companion.call,
-  callByServiceOp: companion.callByServiceOp,
-});

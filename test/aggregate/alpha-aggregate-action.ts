@@ -3,6 +3,7 @@ import {
   OakActionCall,
   OakActionCompanion,
   OakActionRequestEvent,
+  OakEngineContext,
   OakRequestEvent,
 } from '../../src/model';
 import { bizOperationObj } from '../fixture-business-operation';
@@ -64,13 +65,18 @@ const koResponse = {
 };
 
 export const aggregateAction: OakActionCall = async (
+  ctx: OakEngineContext,
   companion: OakActionCompanion,
   request: OakActionRequestEvent
 ) => {
   const londonData = await companion.call.readS1(
+    ctx,
     readFromLondon(request.action)
   );
-  const parisData = await companion.call.readS1(readFromParis(request.action));
+  const parisData = await companion.call.readS1(
+    ctx,
+    readFromParis(request.action)
+  );
   if (londonData.status.name !== 'ok' || parisData.status.name !== 'ok') {
     return Promise.resolve(koResponse);
   }
@@ -86,6 +92,7 @@ export const aggregateAction: OakActionCall = async (
           parisData.payload as CityPayload
         );
   const resp = await companion.call.writeS1(
+    ctx,
     writeToEurope(request.action, aggregated)
   );
   return resp;

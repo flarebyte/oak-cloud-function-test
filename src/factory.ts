@@ -4,8 +4,6 @@ import {
   OakResponseEvent,
 } from './model';
 
-export const createEmptyTx = (): OakEventTransaction[] => [];
-
 export const createEmptyFlags = (): string[] => [];
 
 export const createTransaction = (
