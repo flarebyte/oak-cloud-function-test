@@ -9,6 +9,8 @@ import {
   OakEngineContext,
   OakCall,
   OakCallWrapper,
+  OakServiceOperation,
+  OakEventTransaction,
 } from './model';
 import { summarizeServiceOpTransaction } from './simulator-summarizer';
 
@@ -29,16 +31,21 @@ export class OakSimulator {
     };
     this.actionCompanion = {
       call: {},
-      callByServiceOp: {},
+      callServiceOperationDict: {},
     };
   }
   reset() {
     this.context.transactions = [];
   }
 
-  addTransaction(request: OakRequestEvent, response: OakResponseEvent) {
-    const transaction = {
+  _addTransaction(
+    serviceOperation: OakServiceOperation,
+    request: OakRequestEvent,
+    response: OakResponseEvent
+  ) {
+    const transaction: OakEventTransaction = {
       id: this.context.transactions.length,
+      serviceOperation,
       request,
       response,
     };
@@ -47,12 +54,15 @@ export class OakSimulator {
 
   registerActionCompanions(companions: OakActionCompanion[]) {
     const oneCompanion = mergeActionCompanions(companions);
-    const wrapper: OakCallWrapper = (wrapped: OakCall) => async (
+    const wrapper: OakCallWrapper = (
+      serviceOperation: OakServiceOperation,
+      wrapped: OakCall
+    ) => async (
       context: OakEngineContext,
       request: OakRequestEvent
     ): Promise<OakResponseEvent> => {
       const respEvent = await wrapped(context, request);
-      this.addTransaction(request, respEvent);
+      this._addTransaction(serviceOperation, request, respEvent);
       return respEvent;
     };
     this.actionCompanion = transformActionCompanion(wrapper)(oneCompanion);

@@ -26,7 +26,6 @@ export interface OakResource extends OakBase {}
  * @example read-from-s3
  */
 export interface OakBusinessOperation extends OakBase {
-  serviceOperation: OakServiceOperation;
   resource: OakResource;
 }
 
@@ -67,6 +66,7 @@ export interface OakActionRequestEvent extends OakEvent {
 
 export interface OakEventTransaction {
   id: number;
+  serviceOperation: OakServiceOperation;
   request: OakRequestEvent;
   response: OakResponseEvent;
 }
@@ -105,9 +105,8 @@ export interface OakActionCompanion {
   call: {
     [name: string]: OakCall;
   };
-
-  callByServiceOp: {
-    [name: string]: OakCall;
+  callServiceOperationDict: {
+    [name: string]: OakServiceOperation;
   };
 }
 
@@ -127,7 +126,10 @@ export interface OakFunctionCompanion {
   };
 }
 
-export type OakCallWrapper = (call: OakCall) => OakCall;
+export type OakCallWrapper = (
+  serviceOperation: OakServiceOperation,
+  call: OakCall
+) => OakCall;
 
 export type OakEventTransactionFilter = (
   transaction: OakEventTransaction

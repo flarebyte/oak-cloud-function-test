@@ -58,7 +58,7 @@ const read: OakCall = (ctx: OakEngineContext, reqEvent: OakRequestEvent) => {
   const s1Transactions = ctx.transactions
     .filter(t =>
       isSameName(
-        t.request.businessOperation.serviceOperation,
+        t.serviceOperation,
         coS1.serviceOpDict.write
       )
     )

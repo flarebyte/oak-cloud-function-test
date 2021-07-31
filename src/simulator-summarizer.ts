@@ -6,8 +6,8 @@ export const summarizeServiceOpTransaction = (
 ): OakSimServiceOpTx => ({
   id: event.id,
   businessOperationName: event.request.businessOperation.name,
-  serviceOperationName: event.request.businessOperation.serviceOperation.name,
-  serviceName: event.request.businessOperation.serviceOperation.service.name,
+  serviceOperationName: event.serviceOperation.name,
+  serviceName: event.serviceOperation.service.name,
   caller: event.request.caller,
   serviceParams: event.request.serviceParams,
   systemFlags: event.request.systemFlags.join(' '),
