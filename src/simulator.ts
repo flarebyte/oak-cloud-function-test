@@ -30,10 +30,16 @@ export class OakSimulator {
       systemFlags: [],
     };
     this.actionCompanion = {
+      explicitCall: {},
       call: {},
       callServiceOperationDict: {},
     };
   }
+
+  getCall(){
+    return this.actionCompanion.call;
+  }
+
   reset() {
     this.context.transactions = [];
   }
@@ -57,12 +63,14 @@ export class OakSimulator {
     const wrapper: OakCallWrapper = (
       serviceOperation: OakServiceOperation,
       wrapped: OakCall
-    ) => async (
-      context: OakEngineContext,
-      request: OakRequestEvent
-    ): Promise<OakResponseEvent> => {
-      const respEvent = await wrapped(context, request);
-      this._addTransaction(serviceOperation, request, respEvent);
+    ) => async (request: OakRequestEvent): Promise<OakResponseEvent> => {
+      const thisContext = this.context;
+      const reqEvent: OakRequestEvent = {
+        ...request,
+        systemFlags: [...request.systemFlags, ...thisContext.systemFlags],
+      };
+      const respEvent = await wrapped(thisContext, reqEvent);
+      this._addTransaction(serviceOperation, reqEvent, respEvent);
       return respEvent;
     };
     this.actionCompanion = transformActionCompanion(wrapper)(oneCompanion);

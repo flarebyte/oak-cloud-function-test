@@ -101,9 +101,16 @@ export type OakCall = (
   request: OakRequestEvent
 ) => Promise<OakResponseEvent>;
 
+export type OakCtxCall = (
+  request: OakRequestEvent
+) => Promise<OakResponseEvent>;
+
 export interface OakActionCompanion {
-  call: {
+  explicitCall: {
     [name: string]: OakCall;
+  };
+  call: {
+    [name: string]: OakCtxCall;
   };
   callServiceOperationDict: {
     [name: string]: OakServiceOperation;
@@ -129,7 +136,7 @@ export interface OakFunctionCompanion {
 export type OakCallWrapper = (
   serviceOperation: OakServiceOperation,
   call: OakCall
-) => OakCall;
+) => OakCtxCall;
 
 export type OakEventTransactionFilter = (
   transaction: OakEventTransaction

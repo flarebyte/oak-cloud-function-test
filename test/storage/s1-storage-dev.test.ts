@@ -67,21 +67,13 @@ describe('S1 Storage', () => {
   describe('Test read', () => {
     it('should read the latest value for path', async () => {
       const simulator = new OakSimulator();
-      const ctx = simulator.context;
-
       simulator.registerActionCompanions([s1DevCompanion]);
+      const call = simulator.getCall();
 
-      await simulator.actionCompanion.call.writeS1(
-        ctx,
-        writeToLondonRequestTemplate('london/city/data', 17)
-      );
+      await call.writeS1(writeToLondonRequestTemplate('london/city/data', 17));
 
-      await simulator.actionCompanion.call.writeS1(
-        ctx,
-        writeToLondonRequestTemplate('london/city/data', 19)
-      );
-      const respRead = await simulator.actionCompanion.call.readS1(
-        ctx,
+      await call.writeS1(writeToLondonRequestTemplate('london/city/data', 19));
+      const respRead = await call.readS1(
         readFromLondonRequestTemplate('london/city/data')
       );
       expect(respRead.status.name).toEqual(coS1.statusDict.ok.name);
