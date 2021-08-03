@@ -69,6 +69,7 @@ export interface OakEventTransaction {
   serviceOperation: OakServiceOperation;
   request: OakRequestEvent;
   response: OakResponseEvent;
+  nanoSeconds: string;
 }
 
 export interface OakActionEventTransaction {

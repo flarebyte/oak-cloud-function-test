@@ -1,5 +1,5 @@
 import { OakActionEventTransaction, OakEventTransaction } from './model';
-import { OakActionTx, OakSimServiceOpTx } from './simulator-model';
+import { OakActionTx, OakSimServiceOpTx, OakSimServiceOpTxPerf } from './simulator-model';
 
 export const summarizeServiceOpTransaction = (
   event: OakEventTransaction
@@ -36,4 +36,17 @@ export const summarizeActionTransaction = (
   respComment: event.response.comment,
   respPayload: event.response.payload,
   respFlags: event.response.flags.join(' '),
+});
+
+export const summarizeServiceOpTransactionPerf = (
+  event: OakEventTransaction
+): OakSimServiceOpTxPerf => ({
+  id: event.id,
+  businessOperationName: event.request.businessOperation.name,
+  serviceOperationName: event.serviceOperation.name,
+  serviceName: event.serviceOperation.service.name,
+  resourceName: event.request.businessOperation.resource.name,
+  caller: event.request.caller,
+  statusName: event.response.status.name,
+  nanoSeconds: event.nanoSeconds
 });

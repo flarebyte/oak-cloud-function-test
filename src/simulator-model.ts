@@ -30,3 +30,14 @@ export interface OakActionTx {
   respPayload: object;
   respFlags: string;
 }
+
+export interface OakSimServiceOpTxPerf {
+  id: number;
+  businessOperationName: string;
+  serviceOperationName: string;
+  serviceName: string;
+  resourceName: string;
+  caller: string;
+  statusName: string;
+  nanoSeconds: string;
+}

@@ -21,9 +21,11 @@ import {
   OakActionEventTransaction,
   OakActionCall,
 } from './model';
+import { measureTime } from './perf';
 import {
   summarizeActionTransaction,
   summarizeServiceOpTransaction,
+  summarizeServiceOpTransactionPerf,
 } from './simulator-summarizer';
 
 function cloneValue<A>(value: A): A {
@@ -73,13 +75,16 @@ export class OakSimulator {
   _addTransaction(
     serviceOperation: OakServiceOperation,
     request: OakRequestEvent,
-    response: OakResponseEvent
+    response: OakResponseEvent,
+    nanoSeconds: string
+
   ) {
     const transaction: OakEventTransaction = {
       id: this.context.transactions.length,
       serviceOperation,
       request,
       response,
+      nanoSeconds
     };
     this.context.transactions.push(cloneValue(transaction));
   }
@@ -109,8 +114,10 @@ export class OakSimulator {
         ...request,
         systemFlags: [...request.systemFlags, ...thisContext.systemFlags],
       };
+      const measuring = measureTime()
       const respEvent = await wrapped(thisContext, reqEvent);
-      this._addTransaction(serviceOperation, reqEvent, respEvent);
+      const nanoSeconds = measuring()
+      this._addTransaction(serviceOperation, reqEvent, respEvent, nanoSeconds);
       return respEvent;
     };
     this.actionCompanion = transformActionCompanion(wrapper)(oneCompanion);
@@ -164,5 +171,9 @@ export class OakSimulator {
       null,
       2
     );
+  }
+
+  toServiceOpPerf(){
+    return this.context.transactions.map(summarizeServiceOpTransactionPerf)
   }
 }
