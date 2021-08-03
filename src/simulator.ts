@@ -36,7 +36,7 @@ export class OakSimulator {
     };
   }
 
-  getCall(){
+  getCall() {
     return this.actionCompanion.call;
   }
 
