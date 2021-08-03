@@ -63,7 +63,7 @@ exports[`Alpha Aggregate should show a successful sum 1`] = `
       \\"serviceOperationName\\": \\"company:s1:read\\",
       \\"serviceName\\": \\"company:s1\\",
       \\"resourceName\\": \\"s3:london\\",
-      \\"caller\\": \\"action/alpha-aggregate-europe\\",
+      \\"caller\\": \\"alpha-aggregate-europe\\",
       \\"serviceParams\\": {
         \\"path\\": \\"city/london\\"
       },
@@ -88,7 +88,7 @@ exports[`Alpha Aggregate should show a successful sum 1`] = `
       \\"serviceOperationName\\": \\"company:s1:read\\",
       \\"serviceName\\": \\"company:s1\\",
       \\"resourceName\\": \\"s3:paris\\",
-      \\"caller\\": \\"action/alpha-aggregate-europe\\",
+      \\"caller\\": \\"alpha-aggregate-europe\\",
       \\"serviceParams\\": {
         \\"path\\": \\"city/paris\\"
       },
@@ -113,12 +113,12 @@ exports[`Alpha Aggregate should show a successful sum 1`] = `
       \\"serviceOperationName\\": \\"company:s1:write\\",
       \\"serviceName\\": \\"company:s1\\",
       \\"resourceName\\": \\"s3:europe\\",
-      \\"caller\\": \\"action/alpha-aggregate-europe\\",
+      \\"caller\\": \\"alpha-aggregate-europe\\",
       \\"serviceParams\\": {
         \\"path\\": \\"city/europe\\"
       },
       \\"systemFlags\\": \\"\\",
-      \\"reqComment\\": \\"write to europe\\",
+      \\"reqComment\\": \\"write to Europe\\",
       \\"reqPayload\\": {
         \\"data\\": [
           14,

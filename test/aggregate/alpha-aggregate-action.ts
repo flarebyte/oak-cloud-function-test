@@ -1,10 +1,8 @@
 import {
-  OakAction,
   OakActionCall,
   OakActionCompanion,
   OakActionRequestEvent,
   OakEngineContext,
-  OakRequestEvent,
 } from '../../src/model';
 import { bizOperationObj } from '../fixture-business-operation';
 import { createS1Params } from '../storage/s1-storage-factory';
@@ -15,38 +13,7 @@ import {
 } from './alpha-aggregate-model';
 import { aggregateDataAction } from './alpha-aggregate-data';
 import { buildFunctionCompanion } from '../../src/companion-utils';
-const readFromLondon = (action: OakAction): OakRequestEvent => ({
-  businessOperation: bizOperationObj.readLondonData,
-  caller: `action/${action.name}`,
-  comment: 'read from London',
-  serviceParams: createS1Params('city/london'),
-  systemFlags: [],
-  payload: {},
-  flags: [],
-});
-
-const readFromParis = (action: OakAction): OakRequestEvent => ({
-  businessOperation: bizOperationObj.readParisData,
-  caller: `action/${action.name}`,
-  comment: 'read from Paris',
-  serviceParams: createS1Params('city/paris'),
-  systemFlags: [],
-  payload: {},
-  flags: [],
-});
-
-const writeToEurope = (
-  action: OakAction,
-  cityPayload: CityPayload
-): OakRequestEvent => ({
-  businessOperation: bizOperationObj.writeEuropeData,
-  caller: `action/${action.name}`,
-  comment: 'write to europe',
-  serviceParams: createS1Params('city/europe'),
-  systemFlags: [],
-  payload: cityPayload,
-  flags: [],
-});
+import { createRequestEvent } from '../../src/request-utils';
 
 const mergeCityPayload = (a: CityPayload, b: CityPayload): CityPayload => ({
   data: [...a.data, ...b.data],
@@ -71,10 +38,22 @@ export const aggregateData: OakActionCall = async (
   request: OakActionRequestEvent
 ) => {
   const londonData = await companion.call.readS1(
-    readFromLondon(aggregateDataAction)
+    createRequestEvent({
+      businessOperation: bizOperationObj.readLondonData,
+      comment: 'read from London',
+      serviceParams: createS1Params('city/london'),
+      payload: {},
+      callerAction: aggregateDataAction,
+    })
   );
   const parisData = await companion.call.readS1(
-    readFromParis(aggregateDataAction)
+    createRequestEvent({
+      businessOperation: bizOperationObj.readParisData,
+      comment: 'read from Paris',
+      serviceParams: createS1Params('city/paris'),
+      payload: {},
+      callerAction: aggregateDataAction,
+    })
   );
   if (londonData.status.name !== 'ok' || parisData.status.name !== 'ok') {
     return Promise.resolve(koResponse);
@@ -90,8 +69,15 @@ export const aggregateData: OakActionCall = async (
           londonData.payload as CityPayload,
           parisData.payload as CityPayload
         );
+
   const resp = await companion.call.writeS1(
-    writeToEurope(aggregateDataAction, aggregated)
+    createRequestEvent({
+      businessOperation: bizOperationObj.writeEuropeData,
+      comment: 'write to Europe',
+      serviceParams: createS1Params('city/europe'),
+      payload: aggregated,
+      callerAction: aggregateDataAction,
+    })
   );
   return resp;
 };
