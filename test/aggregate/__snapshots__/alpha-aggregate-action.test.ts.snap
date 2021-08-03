@@ -138,7 +138,7 @@ exports[`Alpha Aggregate should show a successful sum 1`] = `
     {
       \\"id\\": 0,
       \\"actionName\\": \\"alpha-aggregate-europe\\",
-      \\"caller\\": \\"test\\",
+      \\"caller\\": \\"unit-tests-fn\\",
       \\"params\\": {
         \\"task\\": 0
       },

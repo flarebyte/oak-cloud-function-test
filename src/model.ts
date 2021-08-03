@@ -41,6 +41,18 @@ export interface OakAction extends OakBase {
   };
 }
 
+export interface OakFunction extends OakBase {
+  functionName: string;
+  version: string;
+  statusDict: {
+    [name: string]: OakStatus;
+  };
+
+  systemFlagsDict: {
+    [name: string]: string;
+  };
+}
+
 export interface OakEvent {
   comment: string;
   payload: object;

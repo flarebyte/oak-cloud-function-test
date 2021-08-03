@@ -1,24 +1,16 @@
-import {
-  OakActionRequestEvent,
-} from '../../src/model';
 import { OakSimulator } from '../../src/simulator';
 import { bizOperationObj } from '../fixture-business-operation';
 import { s1DevCompanion } from '../storage/s1-storage-dev';
 import { createS1Params } from '../storage/s1-storage-factory';
 import { aggregateCompanion } from './alpha-aggregate-action';
 import { AggregateTask, CityPayload } from './alpha-aggregate-model';
-import { createRequestEvent } from '../../src/request-utils';
+import {
+  createActionRequestEvent,
+  createRequestEvent,
+} from '../../src/request-utils';
 import { testAction } from '../fixture-action';
 import { S1StorageParams } from '../storage/s1-storage-model';
-
-const sumRequest: OakActionRequestEvent = {
-  caller: 'test',
-  comment: 'sum',
-  flags: [],
-  params: { task: AggregateTask.Sum },
-  systemFlags: [],
-  payload: {},
-};
+import { testFunction } from '../fixture-function';
 
 describe('Alpha Aggregate', () => {
   const simulator = new OakSimulator();
@@ -53,7 +45,14 @@ describe('Alpha Aggregate', () => {
         callerAction: testAction,
       })
     );
-    const resp = await callAction.aggregateData(sumRequest);
+    const resp = await callAction.aggregateData(
+      createActionRequestEvent({
+        comment: 'sum',
+        params: { task: AggregateTask.Sum },
+        payload: {},
+        callerFunction: testFunction,
+      })
+    );
     expect(resp.status.name).toEqual('ok');
     expect(simulator.toSimplifiedTx()).toMatchSnapshot();
   });
