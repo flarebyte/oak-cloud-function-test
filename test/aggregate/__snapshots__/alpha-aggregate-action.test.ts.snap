@@ -9,7 +9,7 @@ exports[`Alpha Aggregate should show a successful sum 1`] = `
       \\"serviceOperationName\\": \\"company:s1:write\\",
       \\"serviceName\\": \\"company:s1\\",
       \\"resourceName\\": \\"s3:london\\",
-      \\"caller\\": \\"test\\",
+      \\"caller\\": \\"unit-tests\\",
       \\"serviceParams\\": {
         \\"path\\": \\"city/london\\"
       },
@@ -36,7 +36,7 @@ exports[`Alpha Aggregate should show a successful sum 1`] = `
       \\"serviceOperationName\\": \\"company:s1:write\\",
       \\"serviceName\\": \\"company:s1\\",
       \\"resourceName\\": \\"s3:paris\\",
-      \\"caller\\": \\"test\\",
+      \\"caller\\": \\"unit-tests\\",
       \\"serviceParams\\": {
         \\"path\\": \\"city/paris\\"
       },

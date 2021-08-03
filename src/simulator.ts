@@ -77,14 +77,13 @@ export class OakSimulator {
     request: OakRequestEvent,
     response: OakResponseEvent,
     nanoSeconds: string
-
   ) {
     const transaction: OakEventTransaction = {
       id: this.context.transactions.length,
       serviceOperation,
       request,
       response,
-      nanoSeconds
+      nanoSeconds,
     };
     this.context.transactions.push(cloneValue(transaction));
   }
@@ -114,9 +113,9 @@ export class OakSimulator {
         ...request,
         systemFlags: [...request.systemFlags, ...thisContext.systemFlags],
       };
-      const measuring = measureTime()
+      const measuring = measureTime();
       const respEvent = await wrapped(thisContext, reqEvent);
-      const nanoSeconds = measuring()
+      const nanoSeconds = measuring();
       this._addTransaction(serviceOperation, reqEvent, respEvent, nanoSeconds);
       return respEvent;
     };
@@ -173,7 +172,7 @@ export class OakSimulator {
     );
   }
 
-  toServiceOpPerf(){
-    return this.context.transactions.map(summarizeServiceOpTransactionPerf)
+  toServiceOpPerf() {
+    return this.context.transactions.map(summarizeServiceOpTransactionPerf);
   }
 }
