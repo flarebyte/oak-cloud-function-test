@@ -57,7 +57,7 @@ const sumCityPayload = (a: CityPayload, b: CityPayload): CityPayload => ({
 });
 
 const koResponse = {
-  status: aggregateDataAction.statusDict.ko,
+  status: aggregateDataAction.statusDict.internalServiceError,
   comment: 'Failure',
   payload: {
     message: 'Failure',

@@ -44,19 +44,19 @@ describe('Alpha Aggregate', () => {
     simulator.reset();
   });
   it('should show a successful sum', async () => {
-    call.writeS1(
+    await call.writeS1(
       writeRequestTemplate('city/london', bizOperationObj.writeLondonData, {
         data: [2, 4, 8],
       })
     );
-    call.writeS1(
+    await call.writeS1(
       writeRequestTemplate('city/paris', bizOperationObj.writeParisData, {
         data: [1, 3, 5],
       })
     );
     const resp = await callAction.aggregateData(sumRequest);
-    console.log(simulator.toSimplifiedTx());
     expect(resp.status.name).toEqual('ok');
+    expect(simulator.toSimplifiedTx()).toMatchSnapshot();
     
   });
 });

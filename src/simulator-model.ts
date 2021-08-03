@@ -3,6 +3,7 @@ export interface OakSimServiceOpTx {
   businessOperationName: string;
   serviceOperationName: string;
   serviceName: string;
+  resourceName: string;
   caller: string;
   serviceParams: object;
   systemFlags: string;

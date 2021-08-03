@@ -1,3 +1,158 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Alpha Aggregate should show a successful sum 1`] = `[Function]`;
+exports[`Alpha Aggregate should show a successful sum 1`] = `
+"{
+  \\"tx\\": [
+    {
+      \\"id\\": 0,
+      \\"businessOperationName\\": \\"write-to-london\\",
+      \\"serviceOperationName\\": \\"company:s1:write\\",
+      \\"serviceName\\": \\"company:s1\\",
+      \\"resourceName\\": \\"s3:london\\",
+      \\"caller\\": \\"test\\",
+      \\"serviceParams\\": {
+        \\"path\\": \\"city/london\\"
+      },
+      \\"systemFlags\\": \\"\\",
+      \\"reqComment\\": \\"write to city/london\\",
+      \\"reqPayload\\": {
+        \\"data\\": [
+          2,
+          4,
+          8
+        ]
+      },
+      \\"reqFlags\\": \\"\\",
+      \\"statusName\\": \\"ok\\",
+      \\"respComment\\": \\"Success\\",
+      \\"respPayload\\": {
+        \\"message\\": \\"Saved\\"
+      },
+      \\"respFlags\\": \\"\\"
+    },
+    {
+      \\"id\\": 1,
+      \\"businessOperationName\\": \\"write-to-paris\\",
+      \\"serviceOperationName\\": \\"company:s1:write\\",
+      \\"serviceName\\": \\"company:s1\\",
+      \\"resourceName\\": \\"s3:paris\\",
+      \\"caller\\": \\"test\\",
+      \\"serviceParams\\": {
+        \\"path\\": \\"city/paris\\"
+      },
+      \\"systemFlags\\": \\"\\",
+      \\"reqComment\\": \\"write to city/paris\\",
+      \\"reqPayload\\": {
+        \\"data\\": [
+          1,
+          3,
+          5
+        ]
+      },
+      \\"reqFlags\\": \\"\\",
+      \\"statusName\\": \\"ok\\",
+      \\"respComment\\": \\"Success\\",
+      \\"respPayload\\": {
+        \\"message\\": \\"Saved\\"
+      },
+      \\"respFlags\\": \\"\\"
+    },
+    {
+      \\"id\\": 2,
+      \\"businessOperationName\\": \\"read-from-london\\",
+      \\"serviceOperationName\\": \\"company:s1:read\\",
+      \\"serviceName\\": \\"company:s1\\",
+      \\"resourceName\\": \\"s3:london\\",
+      \\"caller\\": \\"action/alpha-aggregate-europe\\",
+      \\"serviceParams\\": {
+        \\"path\\": \\"city/london\\"
+      },
+      \\"systemFlags\\": \\"\\",
+      \\"reqComment\\": \\"read from London\\",
+      \\"reqPayload\\": {},
+      \\"reqFlags\\": \\"\\",
+      \\"statusName\\": \\"ok\\",
+      \\"respComment\\": \\"Success\\",
+      \\"respPayload\\": {
+        \\"data\\": [
+          2,
+          4,
+          8
+        ]
+      },
+      \\"respFlags\\": \\"\\"
+    },
+    {
+      \\"id\\": 3,
+      \\"businessOperationName\\": \\"read-from-paris\\",
+      \\"serviceOperationName\\": \\"company:s1:read\\",
+      \\"serviceName\\": \\"company:s1\\",
+      \\"resourceName\\": \\"s3:paris\\",
+      \\"caller\\": \\"action/alpha-aggregate-europe\\",
+      \\"serviceParams\\": {
+        \\"path\\": \\"city/paris\\"
+      },
+      \\"systemFlags\\": \\"\\",
+      \\"reqComment\\": \\"read from Paris\\",
+      \\"reqPayload\\": {},
+      \\"reqFlags\\": \\"\\",
+      \\"statusName\\": \\"ok\\",
+      \\"respComment\\": \\"Success\\",
+      \\"respPayload\\": {
+        \\"data\\": [
+          1,
+          3,
+          5
+        ]
+      },
+      \\"respFlags\\": \\"\\"
+    },
+    {
+      \\"id\\": 4,
+      \\"businessOperationName\\": \\"write-to-europe\\",
+      \\"serviceOperationName\\": \\"company:s1:write\\",
+      \\"serviceName\\": \\"company:s1\\",
+      \\"resourceName\\": \\"s3:europe\\",
+      \\"caller\\": \\"action/alpha-aggregate-europe\\",
+      \\"serviceParams\\": {
+        \\"path\\": \\"city/europe\\"
+      },
+      \\"systemFlags\\": \\"\\",
+      \\"reqComment\\": \\"write to europe\\",
+      \\"reqPayload\\": {
+        \\"data\\": [
+          14,
+          9
+        ]
+      },
+      \\"reqFlags\\": \\"\\",
+      \\"statusName\\": \\"ok\\",
+      \\"respComment\\": \\"Success\\",
+      \\"respPayload\\": {
+        \\"message\\": \\"Saved\\"
+      },
+      \\"respFlags\\": \\"\\"
+    }
+  ],
+  \\"actionTx\\": [
+    {
+      \\"id\\": 0,
+      \\"actionName\\": \\"alpha-aggregate-europe\\",
+      \\"caller\\": \\"test\\",
+      \\"params\\": {
+        \\"task\\": 0
+      },
+      \\"systemFlags\\": \\"\\",
+      \\"reqComment\\": \\"sum\\",
+      \\"reqPayload\\": {},
+      \\"reqFlags\\": \\"\\",
+      \\"statusName\\": \\"ok\\",
+      \\"respComment\\": \\"Success\\",
+      \\"respPayload\\": {
+        \\"message\\": \\"Saved\\"
+      },
+      \\"respFlags\\": \\"\\"
+    }
+  ]
+}"
+`;

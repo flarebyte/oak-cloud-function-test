@@ -8,6 +8,7 @@ export const summarizeServiceOpTransaction = (
   businessOperationName: event.request.businessOperation.name,
   serviceOperationName: event.serviceOperation.name,
   serviceName: event.serviceOperation.service.name,
+  resourceName: event.request.businessOperation.resource.name,
   caller: event.request.caller,
   serviceParams: event.request.serviceParams,
   systemFlags: event.request.systemFlags.join(' '),
