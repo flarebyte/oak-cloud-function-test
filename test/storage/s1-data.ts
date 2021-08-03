@@ -22,6 +22,19 @@ const circuitBreaking: OakStatus = {
   flags: [],
 };
 
+const serviceStatusDict = {
+  ok,
+  internalServiceError,
+  notFound,
+  badRequest,
+  circuitBreaking,
+}
+
+const systemFlagsDict = {
+  circuitBreaking: 'circuit-breaking',
+}
+
+
 const read: OakServiceOperation = {
   name: 'company:s1:read',
   functionName: 'readS1',
@@ -29,10 +42,8 @@ const read: OakServiceOperation = {
   service,
   description: 'Read from Company S1',
   flags: [],
-  statusDict: {
-    ok,
-    notFound,
-  },
+  statusDict: serviceStatusDict,
+  systemFlagsDict
 };
 
 const write: OakServiceOperation = {
@@ -42,10 +53,8 @@ const write: OakServiceOperation = {
   service,
   description: 'Write to Company S1',
   flags: [],
-  statusDict: {
-    ok,
-    internalServiceError,
-  },
+  statusDict: serviceStatusDict,
+  systemFlagsDict
 };
 
 const coS1: OakServiceData = {
@@ -57,17 +66,7 @@ const coS1: OakServiceData = {
   serviceOpDict: {
     read,
     write,
-  },
-  statusDict: {
-    ok,
-    internalServiceError,
-    notFound,
-    badRequest,
-    circuitBreaking,
-  },
-  systemFlagsDict: {
-    circuitBreaking: 'circuit-breaking',
-  },
+  }
 };
 
 export { coS1 };

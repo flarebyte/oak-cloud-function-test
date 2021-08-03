@@ -11,7 +11,7 @@ import { validateParams } from './s1-storage-validator';
 import { buildActionCompanion } from '../../src/companion-utils';
 
 const circuitBreakingResponse = {
-  status: coS1.statusDict.circuitBreaking,
+  status: coS1.serviceOpDict.read.statusDict.circuitBreaking,
   comment: 'Circuit breaking',
   payload: {
     message: 'Circuit breaking',
@@ -20,7 +20,7 @@ const circuitBreakingResponse = {
 };
 
 const writeSuccess: OakResponseEvent = {
-  status: coS1.statusDict.ok,
+  status: coS1.serviceOpDict.read.statusDict.ok,
   comment: 'Success',
   payload: {
     message: 'Saved',
@@ -28,7 +28,7 @@ const writeSuccess: OakResponseEvent = {
   flags: [],
 };
 const writeBadRequest: OakResponseEvent = {
-  status: coS1.statusDict.badRequest,
+  status: coS1.serviceOpDict.read.statusDict.badRequest,
   comment: 'Bad request',
   payload: {
     message: 'Not Saved',
@@ -37,7 +37,7 @@ const writeBadRequest: OakResponseEvent = {
 };
 
 const write: OakCall = (_c: OakEngineContext, req: OakRequestEvent) => {
-  if (req.systemFlags.includes(coS1.systemFlagsDict.circuitBreaking)) {
+  if (req.systemFlags.includes(coS1.serviceOpDict.write.systemFlagsDict.circuitBreaking)) {
     return Promise.resolve(circuitBreakingResponse);
   }
   const validErrs = validateParams(req.serviceParams);
@@ -47,7 +47,7 @@ const write: OakCall = (_c: OakEngineContext, req: OakRequestEvent) => {
 };
 
 const notFoundResponse = {
-  status: coS1.statusDict.notFound,
+  status: coS1.serviceOpDict.write.statusDict.notFound,
   comment: 'Not found',
   payload: {
     message: 'document is not found',
@@ -57,7 +57,7 @@ const notFoundResponse = {
 const read: OakCall = (ctx: OakEngineContext, reqEvent: OakRequestEvent) => {
   const s1Transactions = ctx.transactions
     .filter(t => isSameName(t.serviceOperation, coS1.serviceOpDict.write))
-    .filter(t => isSameName(t.response.status, coS1.statusDict.ok))
+    .filter(t => isSameName(t.response.status, coS1.serviceOpDict.read.statusDict.ok))
     .filter(t =>
       isSameName(
         t.request.businessOperation.resource,
@@ -69,7 +69,7 @@ const read: OakCall = (ctx: OakEngineContext, reqEvent: OakRequestEvent) => {
   return s1Transactions.length === 0
     ? Promise.resolve(notFoundResponse)
     : Promise.resolve({
-        status: coS1.statusDict.ok,
+        status: coS1.serviceOpDict.read.statusDict.ok,
         comment: 'Success',
         payload: s1Transactions[0].request.payload,
         flags: [],

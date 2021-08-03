@@ -2,7 +2,7 @@ import { OakAction } from '../../src/model';
 import { statusDict } from '../../src/status-data';
 import { version } from './version';
 
-const { ok, internalServiceError } = statusDict;
+const { ok, internalServiceError, unauthorized } = statusDict;
 
 const aggregateDataAction: OakAction = {
   name: 'alpha-aggregate-europe',
@@ -13,6 +13,7 @@ const aggregateDataAction: OakAction = {
   statusDict: {
     ok,
     internalServiceError,
+    unauthorized
   },
   systemFlagsDict: {
     circuitBreaking: 'circuit-breaking',

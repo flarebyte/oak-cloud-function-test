@@ -6,6 +6,10 @@ import { createS1Params } from './s1-storage-factory';
 import { OakSimulator } from '../../src/simulator';
 import { isSuccessfulStatus } from '../../src/status-utils';
 
+import { statusDict } from '../../src/status-data';
+
+const { notFound, badRequest } = statusDict;
+
 const writeToLondonRequestTemplate = (
   path: string,
   value: number
@@ -72,15 +76,15 @@ describe('S1 Storage', () => {
         ...writeToLondonRequestTemplate('london/city/data', 10),
         serviceParams: { unknownParam: 'some value' },
       });
-      expect(resp.status.name).toEqual(coS1.statusDict.badRequest.name);
+      expect(resp.status.name).toEqual(badRequest.name);
     });
 
     it('should return circuit-breaking if circuit-breaking', async () => {
       const resp = await call.writeS1({
         ...writeToLondonRequestTemplate('london/city/data', 11),
-        systemFlags: [coS1.systemFlagsDict.circuitBreaking],
+        systemFlags: [coS1.serviceOpDict.write.systemFlagsDict.circuitBreaking],
       });
-      expect(resp.status.name).toEqual(coS1.statusDict.circuitBreaking.name);
+      expect(resp.status.name).toEqual(coS1.serviceOpDict.write.statusDict.circuitBreaking.name);
     });
   });
 
@@ -100,7 +104,7 @@ describe('S1 Storage', () => {
       const resp = await call.readS1(
         readFromLondonRequestTemplate('oxford/city/data')
       );
-      expect(resp.status.name).toEqual(coS1.statusDict.notFound.name);
+      expect(resp.status.name).toEqual(notFound.name);
     });
     it('should read the value from the right bucket', async () => {
       await call.writeS1(writeToParisRequestTemplate('london/city/data', 17));
@@ -108,7 +112,7 @@ describe('S1 Storage', () => {
       const respRead = await call.readS1(
         readFromLondonRequestTemplate('london/city/data')
       );
-      expect(respRead.status.name).toEqual(coS1.statusDict.notFound.name);
+      expect(respRead.status.name).toEqual(notFound.name);
     });
   });
 });
