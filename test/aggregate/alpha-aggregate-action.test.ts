@@ -3,15 +3,12 @@ import {
   OakBusinessOperation,
   OakRequestEvent,
 } from '../../src/model';
-import { OakSimulator, simulatedCall } from '../../src/simulator';
+import { OakSimulator } from '../../src/simulator';
 import { bizOperationObj } from '../fixture-business-operation';
-import { coS1 } from '../storage/s1-data';
-import { s1DevHook } from '../storage/s1-storage-dev';
+import { s1DevCompanion } from '../storage/s1-storage-dev';
 import { createS1Params } from '../storage/s1-storage-factory';
-import { aggregateAction } from './alpha-aggregate-action';
-import { aggregateDataAction } from './alpha-aggregate-data';
+import { aggregateCompanion } from './alpha-aggregate-action';
 import { AggregateTask, CityPayload } from './alpha-aggregate-model';
-import { devAlphaCompanion } from './alpha-companion-dev';
 
 const writeRequestTemplate = (
   path: string,
@@ -28,7 +25,6 @@ const writeRequestTemplate = (
 });
 
 const sumRequest: OakActionRequestEvent = {
-  action: aggregateDataAction,
   caller: 'test',
   comment: 'sum',
   flags: [],
@@ -39,24 +35,28 @@ const sumRequest: OakActionRequestEvent = {
 
 describe('Alpha Aggregate', () => {
   const simulator = new OakSimulator();
-  simulator.registerServiceOpToCall(coS1.serviceOpDict.write, s1DevHook.write);
-  simulator.registerServiceOpToCall(coS1.serviceOpDict.read, s1DevHook.read);
-  const simCall = simulatedCall(simulator);
-  const alphaCompanion = devAlphaCompanion(simulator);
-  it('should show a successful sum', async () => {
+  simulator.registerActionCompanions([s1DevCompanion]);
+  simulator.registerFunctionCompanions([aggregateCompanion]);
+  const call = simulator.getCall();
+  const callAction = simulator.getActionCall();
+
+  beforeEach(() => {
     simulator.reset();
-    simCall(
+  });
+  it('should show a successful sum', async () => {
+    call.writeS1(
       writeRequestTemplate('city/london', bizOperationObj.writeLondonData, {
         data: [2, 4, 8],
       })
     );
-    simCall(
+    call.writeS1(
       writeRequestTemplate('city/paris', bizOperationObj.writeParisData, {
         data: [1, 3, 5],
       })
     );
-    const resp = await aggregateAction(alphaCompanion, sumRequest);
+    const resp = await callAction.aggregateData(sumRequest);
+    console.log(simulator.toSimplifiedTx());
     expect(resp.status.name).toEqual('ok');
-    expect(simulator.toInfo()).toMatchSnapshot();
+    
   });
 });

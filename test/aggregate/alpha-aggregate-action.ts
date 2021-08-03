@@ -14,6 +14,7 @@ import {
   CityPayload,
 } from './alpha-aggregate-model';
 import { aggregateDataAction } from './alpha-aggregate-data';
+import { buildFunctionCompanion } from '../../src/companion-utils';
 const readFromLondon = (action: OakAction): OakRequestEvent => ({
   businessOperation: bizOperationObj.readLondonData,
   caller: `action/${action.name}`,
@@ -64,18 +65,16 @@ const koResponse = {
   flags: [],
 };
 
-export const aggregateAction: OakActionCall = async (
-  ctx: OakEngineContext,
+export const aggregateData: OakActionCall = async (
+  _ctx: OakEngineContext,
   companion: OakActionCompanion,
   request: OakActionRequestEvent
 ) => {
   const londonData = await companion.call.readS1(
-    ctx,
-    readFromLondon(request.action)
+    readFromLondon(aggregateDataAction)
   );
   const parisData = await companion.call.readS1(
-    ctx,
-    readFromParis(request.action)
+    readFromParis(aggregateDataAction)
   );
   if (londonData.status.name !== 'ok' || parisData.status.name !== 'ok') {
     return Promise.resolve(koResponse);
@@ -92,8 +91,14 @@ export const aggregateAction: OakActionCall = async (
           parisData.payload as CityPayload
         );
   const resp = await companion.call.writeS1(
-    ctx,
-    writeToEurope(request.action, aggregated)
+    writeToEurope(aggregateDataAction, aggregated)
   );
   return resp;
 };
+
+export const aggregateCompanion = buildFunctionCompanion([
+  {
+    action: aggregateDataAction,
+    call: aggregateData,
+  },
+]);

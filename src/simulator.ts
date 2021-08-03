@@ -1,6 +1,9 @@
 import {
   mergeActionCompanions,
+  mergeFunctionCompanions,
+  OakFunctionCompanionBuilder,
   transformActionCompanion,
+  transformFunctionCompanion,
 } from './companion-utils';
 import {
   OakRequestEvent,
@@ -11,8 +14,17 @@ import {
   OakCallWrapper,
   OakServiceOperation,
   OakEventTransaction,
+  OakFunctionCompanion,
+  OakActionCallWrapper,
+  OakAction,
+  OakActionRequestEvent,
+  OakActionEventTransaction,
+  OakActionCall,
 } from './model';
-import { summarizeServiceOpTransaction } from './simulator-summarizer';
+import {
+  summarizeActionTransaction,
+  summarizeServiceOpTransaction,
+} from './simulator-summarizer';
 
 function cloneValue<A>(value: A): A {
   const jsonStr = JSON.stringify(value);
@@ -23,10 +35,12 @@ function cloneValue<A>(value: A): A {
 export class OakSimulator {
   context: OakEngineContext;
   actionCompanion: OakActionCompanion;
+  functionCompanion: OakFunctionCompanion;
 
   constructor() {
     this.context = {
       transactions: [],
+      actionTransactions: [],
       systemFlags: [],
     };
     this.actionCompanion = {
@@ -34,14 +48,26 @@ export class OakSimulator {
       call: {},
       callServiceOperationDict: {},
     };
+    this.functionCompanion = {
+      explicitCall: {},
+      call: {},
+      actionDict: {},
+    };
   }
 
   getCall() {
     return this.actionCompanion.call;
   }
+  getActionCall() {
+    return this.functionCompanion.call;
+  }
 
   reset() {
-    this.context.transactions = [];
+    this.context = {
+      transactions: [],
+      actionTransactions: [],
+      systemFlags: [],
+    };
   }
 
   _addTransaction(
@@ -56,6 +82,20 @@ export class OakSimulator {
       response,
     };
     this.context.transactions.push(cloneValue(transaction));
+  }
+
+  _addActionTransaction(
+    action: OakAction,
+    request: OakActionRequestEvent,
+    response: OakResponseEvent
+  ) {
+    const transaction: OakActionEventTransaction = {
+      id: this.context.actionTransactions.length,
+      action,
+      request,
+      response,
+    };
+    this.context.actionTransactions.push(cloneValue(transaction));
   }
 
   registerActionCompanions(companions: OakActionCompanion[]) {
@@ -76,6 +116,31 @@ export class OakSimulator {
     this.actionCompanion = transformActionCompanion(wrapper)(oneCompanion);
   }
 
+  registerFunctionCompanions(companionBuilders: OakFunctionCompanionBuilder[]) {
+    const companions = companionBuilders.map(builder =>
+      builder(this.actionCompanion)
+    );
+    const oneCompanion = mergeFunctionCompanions(companions);
+    const wrapper: OakActionCallWrapper = (
+      action: OakAction,
+      wrapped: OakActionCall
+    ) => async (request: OakActionRequestEvent): Promise<OakResponseEvent> => {
+      const thisContext = this.context;
+      const reqEvent: OakActionRequestEvent = {
+        ...request,
+        systemFlags: [...request.systemFlags, ...thisContext.systemFlags],
+      };
+      const respEvent = await wrapped(
+        thisContext,
+        this.actionCompanion,
+        reqEvent
+      );
+      this._addActionTransaction(action, reqEvent, respEvent);
+      return respEvent;
+    };
+    this.functionCompanion = transformFunctionCompanion(wrapper)(oneCompanion);
+  }
+
   toFullInfo() {
     return JSON.stringify(this.context.transactions, null, 2);
   }
@@ -83,6 +148,19 @@ export class OakSimulator {
   toInfo() {
     return JSON.stringify(
       this.context.transactions.map(summarizeServiceOpTransaction),
+      null,
+      2
+    );
+  }
+
+  toSimplifiedTx() {
+    return JSON.stringify(
+      {
+        tx: this.context.transactions.map(summarizeServiceOpTransaction),
+        actionTx: this.context.actionTransactions.map(
+          summarizeActionTransaction
+        ),
+      },
       null,
       2
     );

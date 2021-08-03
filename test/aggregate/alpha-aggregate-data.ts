@@ -6,6 +6,7 @@ const { ok, internalServiceError } = statusDict;
 
 const aggregateDataAction: OakAction = {
   name: 'alpha-aggregate-europe',
+  functionName: 'aggregateData',
   version,
   description: 'Aggregate european data',
   flags: [],

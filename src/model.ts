@@ -30,6 +30,7 @@ export interface OakBusinessOperation extends OakBase {
 }
 
 export interface OakAction extends OakBase {
+  functionName: string;
   version: string;
   statusDict: {
     [name: string]: OakStatus;
@@ -58,7 +59,6 @@ export interface OakResponseEvent extends OakEvent {
 }
 
 export interface OakActionRequestEvent extends OakEvent {
-  action: OakAction;
   caller: string;
   params: object;
   systemFlags: string[];
@@ -73,6 +73,7 @@ export interface OakEventTransaction {
 
 export interface OakActionEventTransaction {
   id: number;
+  action: OakAction;
   request: OakActionRequestEvent;
   response: OakResponseEvent;
 }
@@ -93,6 +94,7 @@ export interface OakServiceData extends OakBase {
 
 export interface OakEngineContext {
   transactions: OakEventTransaction[];
+  actionTransactions: OakActionEventTransaction[];
   systemFlags: string[];
 }
 
@@ -123,13 +125,19 @@ export type OakActionCall = (
   request: OakActionRequestEvent
 ) => Promise<OakResponseEvent>;
 
+export type OakActionCtxCall = (
+  request: OakActionRequestEvent
+) => Promise<OakResponseEvent>;
+
 export interface OakFunctionCompanion {
-  actionCompanion: OakActionCompanion;
-  call: {
+  explicitCall: {
     [name: string]: OakActionCall;
   };
-  callByAction: {
-    [name: string]: OakActionCall;
+  call: {
+    [name: string]: OakActionCtxCall;
+  };
+  actionDict: {
+    [name: string]: OakAction;
   };
 }
 
@@ -138,11 +146,17 @@ export type OakCallWrapper = (
   call: OakCall
 ) => OakCtxCall;
 
-export type OakEventTransactionFilter = (
-  transaction: OakEventTransaction
-) => boolean;
+export type OakActionCallWrapper = (
+  action: OakAction,
+  call: OakActionCall
+) => OakActionCtxCall;
 
 export interface OakServiceOpToCall {
   so: OakServiceOperation;
   call: OakCall;
+}
+
+export interface OakActionToCall {
+  action: OakAction;
+  call: OakActionCall;
 }
