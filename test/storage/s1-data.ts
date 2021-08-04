@@ -5,10 +5,7 @@ import {
   OakStatus,
 } from '../../src/model';
 
-import { statusDict } from '../../src/status-data';
 import { version } from './version';
-
-const { ok, notFound, badRequest, internalServiceError } = statusDict;
 
 const service: OakService = {
   name: 'company:s1',
@@ -22,18 +19,9 @@ const circuitBreaking: OakStatus = {
   flags: [],
 };
 
-const serviceStatusDict = {
-  ok,
-  internalServiceError,
-  notFound,
-  badRequest,
-  circuitBreaking,
-}
-
 const systemFlagsDict = {
   circuitBreaking: 'circuit-breaking',
-}
-
+};
 
 const read: OakServiceOperation = {
   name: 'company:s1:read',
@@ -42,8 +30,7 @@ const read: OakServiceOperation = {
   service,
   description: 'Read from Company S1',
   flags: [],
-  statusDict: serviceStatusDict,
-  systemFlagsDict
+  systemFlagsDict,
 };
 
 const write: OakServiceOperation = {
@@ -53,8 +40,7 @@ const write: OakServiceOperation = {
   service,
   description: 'Write to Company S1',
   flags: [],
-  statusDict: serviceStatusDict,
-  systemFlagsDict
+  systemFlagsDict,
 };
 
 const coS1: OakServiceData = {
@@ -66,7 +52,10 @@ const coS1: OakServiceData = {
   serviceOpDict: {
     read,
     write,
-  }
+  },
+  customStatusDict: {
+    circuitBreaking,
+  },
 };
 
 export { coS1 };

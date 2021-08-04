@@ -14,6 +14,9 @@ import {
 import { aggregateDataAction } from './alpha-aggregate-data';
 import { buildFunctionCompanion } from '../../src/companion-utils';
 import { createRequestEvent } from '../../src/request-utils';
+import { statusDict } from '../../src/status-data';
+
+const { internalServiceError } = statusDict;
 
 const mergeCityPayload = (a: CityPayload, b: CityPayload): CityPayload => ({
   data: [...a.data, ...b.data],
@@ -24,7 +27,7 @@ const sumCityPayload = (a: CityPayload, b: CityPayload): CityPayload => ({
 });
 
 const koResponse = {
-  status: aggregateDataAction.statusDict.internalServiceError,
+  status: internalServiceError,
   comment: 'Failure',
   payload: {
     message: 'Failure',

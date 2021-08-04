@@ -8,9 +8,10 @@ import {
   createActionRequestEvent,
   createRequestEvent,
 } from '../../src/request-utils';
-import { testAction } from '../fixture-action';
 import { S1StorageParams } from '../storage/s1-storage-model';
-import { testFunction } from '../fixture-function';
+
+import { actorData } from '../../src/actor-data';
+const { actionDict } = actorData;
 
 describe('Alpha Aggregate', () => {
   const simulator = new OakSimulator();
@@ -31,7 +32,7 @@ describe('Alpha Aggregate', () => {
         payload: {
           data: [2, 4, 8],
         },
-        callerAction: testAction,
+        callerAction: actionDict.beforeTest,
       })
     );
     await call.writeS1(
@@ -42,7 +43,7 @@ describe('Alpha Aggregate', () => {
         payload: {
           data: [1, 3, 5],
         },
-        callerAction: testAction,
+        callerAction: actionDict.beforeTest,
       })
     );
     const resp = await callAction.aggregateData(
@@ -50,7 +51,7 @@ describe('Alpha Aggregate', () => {
         comment: 'sum',
         params: { task: AggregateTask.Sum },
         payload: {},
-        callerFunction: testFunction,
+        callerFunction: actionDict.test,
       })
     );
     expect(resp.status.name).toEqual('ok');

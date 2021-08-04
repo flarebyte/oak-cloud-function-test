@@ -9,7 +9,7 @@ exports[`Alpha Aggregate should show a successful sum 1`] = `
       \\"serviceOperationName\\": \\"company:s1:write\\",
       \\"serviceName\\": \\"company:s1\\",
       \\"resourceName\\": \\"s3:london\\",
-      \\"caller\\": \\"unit-tests\\",
+      \\"caller\\": \\"oak-cloud-function-test/action/before-test\\",
       \\"serviceParams\\": {
         \\"path\\": \\"city/london\\"
       },
@@ -36,7 +36,7 @@ exports[`Alpha Aggregate should show a successful sum 1`] = `
       \\"serviceOperationName\\": \\"company:s1:write\\",
       \\"serviceName\\": \\"company:s1\\",
       \\"resourceName\\": \\"s3:paris\\",
-      \\"caller\\": \\"unit-tests\\",
+      \\"caller\\": \\"oak-cloud-function-test/action/before-test\\",
       \\"serviceParams\\": {
         \\"path\\": \\"city/paris\\"
       },
@@ -138,7 +138,7 @@ exports[`Alpha Aggregate should show a successful sum 1`] = `
     {
       \\"id\\": 0,
       \\"actionName\\": \\"alpha-aggregate-europe\\",
-      \\"caller\\": \\"unit-tests-fn\\",
+      \\"caller\\": \\"oak-cloud-function-test/action/test\\",
       \\"params\\": {
         \\"task\\": 0
       },

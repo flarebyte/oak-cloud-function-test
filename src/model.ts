@@ -14,9 +14,6 @@ export interface OakServiceOperation extends OakBase {
   functionName: string;
   service: OakService;
   version: string;
-  statusDict: {
-    [name: string]: OakStatus;
-  };
   systemFlagsDict: {
     [name: string]: string;
   };
@@ -35,7 +32,7 @@ export interface OakBusinessOperation extends OakBase {
 export interface OakAction extends OakBase {
   functionName: string;
   version: string;
-  statusDict: {
+  customStatusDict: {
     [name: string]: OakStatus;
   };
   systemFlagsDict: {
@@ -46,7 +43,7 @@ export interface OakAction extends OakBase {
 export interface OakFunction extends OakBase {
   functionName: string;
   version: string;
-  statusDict: {
+  customStatusDict: {
     [name: string]: OakStatus;
   };
 
@@ -98,6 +95,9 @@ export interface OakServiceData extends OakBase {
   version: string;
   serviceOpDict: {
     [name: string]: OakServiceOperation;
+  };
+  customStatusDict: {
+    [name: string]: OakStatus;
   };
 }
 

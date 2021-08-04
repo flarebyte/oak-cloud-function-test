@@ -9,6 +9,7 @@ import { isSuccessfulStatus } from '../../src/status-utils';
 import { statusDict } from '../../src/status-data';
 
 const { notFound, badRequest } = statusDict;
+const { circuitBreaking } = coS1.customStatusDict;
 
 const writeToLondonRequestTemplate = (
   path: string,
@@ -84,7 +85,7 @@ describe('S1 Storage', () => {
         ...writeToLondonRequestTemplate('london/city/data', 11),
         systemFlags: [coS1.serviceOpDict.write.systemFlagsDict.circuitBreaking],
       });
-      expect(resp.status.name).toEqual(coS1.serviceOpDict.write.statusDict.circuitBreaking.name);
+      expect(resp.status.name).toEqual(circuitBreaking.name);
     });
   });
 
