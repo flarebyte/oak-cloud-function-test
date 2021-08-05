@@ -14,3 +14,14 @@ export const isInvalidStatus = (actual: OakStatus): boolean =>
 
 export const isFailureStatus = (actual: OakStatus): boolean =>
   actual.flags.includes(statusFlagDict.failure);
+
+export const findStatusByName = (
+  name: string,
+  statusList: OakStatus[]
+): OakStatus | false =>
+  statusList.find(status => status.name === name) || false;
+
+export const findStatusByNameInDict = (
+  name: string,
+  refStatusDict: { [key: string]: OakStatus }
+): OakStatus | false => findStatusByName(name, Object.values(refStatusDict));

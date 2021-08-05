@@ -37,7 +37,10 @@ export const buildActionCompanion = (mapping: OakServiceOpToCall[]): OakActionCo
   const tempCtx: OakEngineContext = {
     transactions: [],
     actionTransactions: [],
-    systemFlags: []
+    systemFlags: [],
+    businessOperationFlags: {},
+    actionFlags: {},
+    functionFlags: {},
   }
   const call = Object.fromEntries(mapping.map( m => [m.so.functionName, (req: OakRequestEvent) => m.call(tempCtx, req)]))
   const callServiceOperationDict = Object.fromEntries(mapping.map( m => [m.so.functionName, m.so]))
@@ -81,7 +84,10 @@ export const buildFunctionCompanion = (mapping: OakActionToCall[]) => (actionCom
   const tempCtx: OakEngineContext = {
     transactions: [],
     actionTransactions: [],
-    systemFlags: []
+    systemFlags: [],
+    businessOperationFlags: {},
+    actionFlags: {},
+    functionFlags: {},
   }
   const call = Object.fromEntries(mapping.map( m => [m.action.functionName, (req: OakActionRequestEvent) => m.call(tempCtx, actionCompanion, req)]))
   const actionDict = Object.fromEntries(mapping.map( m => [m.action.functionName, m.action]))

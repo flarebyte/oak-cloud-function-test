@@ -5,6 +5,7 @@ import {
   transformActionCompanion,
   transformFunctionCompanion,
 } from './companion-utils';
+import { defaultBeforeCall } from './interceptor';
 import {
   OakRequestEvent,
   OakResponseEvent,
@@ -20,6 +21,7 @@ import {
   OakActionRequestEvent,
   OakActionEventTransaction,
   OakActionCall,
+  OakBeforeCall,
 } from './model';
 import { measureTime } from './perf';
 import {
@@ -27,6 +29,7 @@ import {
   summarizeServiceOpTransaction,
   summarizeServiceOpTransactionPerf,
 } from './simulator-summarizer';
+import { statusDict } from './status-data';
 
 function cloneValue<A>(value: A): A {
   const jsonStr = JSON.stringify(value);
@@ -38,12 +41,16 @@ export class OakSimulator {
   context: OakEngineContext;
   actionCompanion: OakActionCompanion;
   functionCompanion: OakFunctionCompanion;
+  beforeCall: OakBeforeCall;
 
   constructor() {
     this.context = {
       transactions: [],
       actionTransactions: [],
       systemFlags: [],
+      businessOperationFlags: {},
+      actionFlags: {},
+      functionFlags: {},
     };
     this.actionCompanion = {
       explicitCall: {},
@@ -55,6 +62,7 @@ export class OakSimulator {
       call: {},
       actionDict: {},
     };
+    this.beforeCall = defaultBeforeCall(statusDict);
   }
 
   getCall() {
@@ -69,7 +77,14 @@ export class OakSimulator {
       transactions: [],
       actionTransactions: [],
       systemFlags: [],
+      businessOperationFlags: {},
+      actionFlags: {},
+      functionFlags: {},
     };
+  }
+
+  setBeforeCall(beforeCall: OakBeforeCall) {
+    this.beforeCall = beforeCall;
   }
 
   _addTransaction(
@@ -114,7 +129,14 @@ export class OakSimulator {
         systemFlags: [...request.systemFlags, ...thisContext.systemFlags],
       };
       const measuring = measureTime();
-      const respEvent = await wrapped(thisContext, reqEvent);
+      const beforeIntercept = this.beforeCall(
+        serviceOperation,
+        thisContext,
+        reqEvent
+      );
+      const respEvent = beforeIntercept.pass
+        ? await wrapped(thisContext, reqEvent)
+        : await beforeIntercept.call(thisContext, reqEvent);
       const nanoSeconds = measuring();
       this._addTransaction(serviceOperation, reqEvent, respEvent, nanoSeconds);
       return respEvent;

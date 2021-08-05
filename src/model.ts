@@ -105,6 +105,15 @@ export interface OakEngineContext {
   transactions: OakEventTransaction[];
   actionTransactions: OakActionEventTransaction[];
   systemFlags: string[];
+  businessOperationFlags: {
+    [name: string]: string[];
+  };
+  actionFlags: {
+    [name: string]: string[];
+  };
+  functionFlags: {
+    [name: string]: string[];
+  };
 }
 
 export type OakCall = (
@@ -115,6 +124,16 @@ export type OakCall = (
 export type OakCtxCall = (
   request: OakRequestEvent
 ) => Promise<OakResponseEvent>;
+
+export interface OakBeforeCallInterceptor {
+  call: OakCall;
+  pass: boolean;
+}
+export type OakBeforeCall = (
+  serviceOperation: OakServiceOperation,
+  context: OakEngineContext,
+  request: OakRequestEvent
+) => OakBeforeCallInterceptor;
 
 export interface OakActionCompanion {
   explicitCall: {
