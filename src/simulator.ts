@@ -120,7 +120,7 @@ export class OakSimulator {
     this.context.actionTransactions.push(cloneValue(transaction));
   }
 
-  registerActionCompanions(companions: OakActionCompanion[]) {
+  _registerActionCompanions(companions: OakActionCompanion[]) {
     const oneCompanion = mergeActionCompanions(companions);
     const wrapper: OakCallWrapper = (
       serviceOperation: OakServiceOperation,
@@ -147,7 +147,9 @@ export class OakSimulator {
     this.actionCompanion = transformActionCompanion(wrapper)(oneCompanion);
   }
 
-  registerFunctionCompanions(companionBuilders: OakFunctionCompanionBuilder[]) {
+  _registerFunctionCompanions(
+    companionBuilders: OakFunctionCompanionBuilder[]
+  ) {
     const companions = companionBuilders.map(builder =>
       builder(this.actionCompanion)
     );
@@ -170,6 +172,18 @@ export class OakSimulator {
       return respEvent;
     };
     this.functionCompanion = transformFunctionCompanion(wrapper)(oneCompanion);
+  }
+
+  registerCompanions(
+    companions: OakActionCompanion[],
+    companionBuilders: OakFunctionCompanionBuilder[]
+  ) {
+    if (companions.length > 0) {
+      this._registerActionCompanions(companions);
+    }
+    if (companionBuilders.length > 0) {
+      this._registerFunctionCompanions(companionBuilders);
+    }
   }
 
   setReturnStatusForBusinessOp(

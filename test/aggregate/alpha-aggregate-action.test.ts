@@ -15,8 +15,7 @@ const { actionDict } = actorData;
 
 describe('Alpha Aggregate', () => {
   const simulator = new OakSimulator();
-  simulator.registerActionCompanions([s1DevCompanion]);
-  simulator.registerFunctionCompanions([aggregateCompanion]);
+  simulator.registerCompanions([s1DevCompanion], [aggregateCompanion]);
   const call = simulator.getCall();
   const callAction = simulator.getActionCall();
 

@@ -51,7 +51,7 @@ const readFromLondonRequestTemplate = (path: string): OakRequestEvent => ({
 
 describe('S1 Storage', () => {
   const simulator = new OakSimulator();
-  simulator.registerActionCompanions([s1DevCompanion]);
+  simulator.registerCompanions([s1DevCompanion], []);
   const call = simulator.getCall();
 
   beforeEach(() => {

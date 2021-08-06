@@ -2,7 +2,7 @@ import { OakStatus } from './model';
 import { statusFlagDict } from './status-data';
 import { findStatusByNameInDict } from './status-utils';
 
-const returnStatusFlag = 'return:status=';
+const responseStatusFlag = 'response:status=';
 
 const flagStartsWith = (text: string) => (flag: string) =>
   flag.startsWith(text);
@@ -19,8 +19,8 @@ export const shouldReturnStatus = (
   },
   flags: string[]
 ): OakStatus | false => {
-  const name = (flags.find(flagStartsWith(returnStatusFlag)) || '')
-    .replace(returnStatusFlag, '')
+  const name = (flags.find(flagStartsWith(responseStatusFlag)) || '')
+    .replace(responseStatusFlag, '')
     .trim();
   return name
     ? findStatusByNameInDict(name, statusObj) || createFailedStatus(name)
@@ -32,8 +32,8 @@ export const updateReturnStatus = (
   existingFlags: string[]
 ): string[] => {
   const removedPrevious = existingFlags.filter(
-    flag => !flag.startsWith(returnStatusFlag)
+    flag => !flag.startsWith(responseStatusFlag)
   );
-  const newFlag = `${returnStatusFlag}${status.name}`;
+  const newFlag = `${responseStatusFlag}${status.name}`;
   return [...removedPrevious, newFlag];
 };
