@@ -12,15 +12,6 @@ import { buildActionCompanion } from '../../src/companion-utils';
 import { statusDict } from '../../src/status-data';
 const { ok, badRequest, notFound } = statusDict;
 
-const circuitBreakingResponse = {
-  status: coS1.customStatusDict.circuitBreaking,
-  comment: 'Circuit breaking',
-  payload: {
-    message: 'Circuit breaking',
-  },
-  flags: [],
-};
-
 const writeSuccess: OakResponseEvent = {
   status: ok,
   comment: 'Success',
@@ -39,13 +30,6 @@ const writeBadRequest: OakResponseEvent = {
 };
 
 const write: OakCall = (_c: OakEngineContext, req: OakRequestEvent) => {
-  if (
-    req.systemFlags.includes(
-      coS1.serviceOpDict.write.systemFlagsDict.circuitBreaking
-    )
-  ) {
-    return Promise.resolve(circuitBreakingResponse);
-  }
   const validErrs = validateParams(req.serviceParams);
   return validErrs.length === 0
     ? Promise.resolve(writeSuccess)

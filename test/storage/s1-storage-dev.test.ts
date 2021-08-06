@@ -1,6 +1,5 @@
 import { OakRequestEvent } from '../../src/model';
 import { bizOperationObj } from '../fixture-business-operation';
-import { coS1 } from './s1-data';
 import { s1DevCompanion } from './s1-storage-dev';
 import { createS1Params } from './s1-storage-factory';
 import { OakSimulator } from '../../src/simulator';
@@ -8,8 +7,7 @@ import { isSuccessfulStatus } from '../../src/status-utils';
 
 import { statusDict } from '../../src/status-data';
 
-const { notFound, badRequest } = statusDict;
-const { circuitBreaking } = coS1.customStatusDict;
+const { notFound, badRequest, forbidden } = statusDict;
 
 const writeToLondonRequestTemplate = (
   path: string,
@@ -80,12 +78,15 @@ describe('S1 Storage', () => {
       expect(resp.status.name).toEqual(badRequest.name);
     });
 
-    it('should return circuit-breaking if circuit-breaking', async () => {
+    it('should return forbidden if forbidden', async () => {
+      simulator.setReturnStatusForBusinessOp(
+        bizOperationObj.writeLondonData,
+        forbidden
+      );
       const resp = await call.writeS1({
         ...writeToLondonRequestTemplate('london/city/data', 11),
-        systemFlags: [coS1.serviceOpDict.write.systemFlagsDict.circuitBreaking],
       });
-      expect(resp.status.name).toEqual(circuitBreaking.name);
+      expect(resp.status.name).toEqual(forbidden.name);
     });
   });
 

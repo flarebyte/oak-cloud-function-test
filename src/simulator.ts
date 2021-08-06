@@ -5,6 +5,7 @@ import {
   transformActionCompanion,
   transformFunctionCompanion,
 } from './companion-utils';
+import { updateReturnStatus } from './flag-utils';
 import { defaultBeforeCall } from './interceptor';
 import {
   OakRequestEvent,
@@ -22,6 +23,8 @@ import {
   OakActionEventTransaction,
   OakActionCall,
   OakBeforeCall,
+  OakBusinessOperation,
+  OakStatus,
 } from './model';
 import { measureTime } from './perf';
 import {
@@ -167,6 +170,16 @@ export class OakSimulator {
       return respEvent;
     };
     this.functionCompanion = transformFunctionCompanion(wrapper)(oneCompanion);
+  }
+
+  setReturnStatusForBusinessOp(
+    businessOperation: OakBusinessOperation,
+    expectedStatus: OakStatus
+  ) {
+    const existingFlags =
+      this.context.businessOperationFlags[businessOperation.name] || [];
+    const newFlags = updateReturnStatus(expectedStatus, existingFlags);
+    this.context.businessOperationFlags[businessOperation.name] = newFlags;
   }
 
   toFullInfo() {

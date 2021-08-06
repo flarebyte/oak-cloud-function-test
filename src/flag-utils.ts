@@ -26,3 +26,14 @@ export const shouldReturnStatus = (
     ? findStatusByNameInDict(name, statusObj) || createFailedStatus(name)
     : false;
 };
+
+export const updateReturnStatus = (
+  status: OakStatus,
+  existingFlags: string[]
+): string[] => {
+  const removedPrevious = existingFlags.filter(
+    flag => !flag.startsWith(returnStatusFlag)
+  );
+  const newFlag = `${returnStatusFlag}${status.name}`;
+  return [...removedPrevious, newFlag];
+};
