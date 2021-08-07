@@ -5,6 +5,7 @@ import {
   transformActionCompanion,
   transformFunctionCompanion,
 } from './companion-utils';
+import { createEmptyContext } from './context-utils';
 import { updateReturnStatus } from './flag-utils';
 import { defaultBeforeCall } from './interceptor';
 import {
@@ -26,6 +27,7 @@ import {
   OakBusinessOperation,
   OakStatus,
 } from './model';
+import { cloneValue } from './obj-utils';
 import { measureTime } from './perf';
 import {
   summarizeActionTransaction,
@@ -34,12 +36,6 @@ import {
 } from './simulator-summarizer';
 import { statusDict } from './status-data';
 
-function cloneValue<A>(value: A): A {
-  const jsonStr = JSON.stringify(value);
-  const result: A = JSON.parse(jsonStr);
-  return result;
-}
-
 export class OakSimulator {
   context: OakEngineContext;
   actionCompanion: OakActionCompanion;
@@ -47,14 +43,7 @@ export class OakSimulator {
   beforeCall: OakBeforeCall;
 
   constructor() {
-    this.context = {
-      transactions: [],
-      actionTransactions: [],
-      systemFlags: [],
-      businessOperationFlags: {},
-      actionFlags: {},
-      functionFlags: {},
-    };
+    this.context = createEmptyContext();
     this.actionCompanion = {
       explicitCall: {},
       call: {},
@@ -76,14 +65,7 @@ export class OakSimulator {
   }
 
   reset() {
-    this.context = {
-      transactions: [],
-      actionTransactions: [],
-      systemFlags: [],
-      businessOperationFlags: {},
-      actionFlags: {},
-      functionFlags: {},
-    };
+    this.context = createEmptyContext();
   }
 
   setBeforeCall(beforeCall: OakBeforeCall) {
@@ -224,4 +206,6 @@ export class OakSimulator {
   toServiceOpPerf() {
     return this.context.transactions.map(summarizeServiceOpTransactionPerf);
   }
+
+  runAction(_action: OakAction, _request: OakActionRequestEvent) {}
 }

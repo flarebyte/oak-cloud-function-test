@@ -90,6 +90,11 @@ export interface OakActionEventTransaction {
   response: OakResponseEvent;
 }
 
+export interface OakActionAndRequest {
+  action: OakAction;
+  request: OakActionRequestEvent;
+}
+
 export interface OakServiceData extends OakBase {
   service: OakService;
   version: string;

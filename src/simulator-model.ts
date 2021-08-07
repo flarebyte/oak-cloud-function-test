@@ -1,3 +1,5 @@
+import { OakActionAndRequest } from './model';
+
 export interface OakSimServiceOpTx {
   id: number;
   businessOperationName: string;
@@ -40,4 +42,10 @@ export interface OakSimServiceOpTxPerf {
   caller: string;
   statusName: string;
   nanoSeconds: string;
+}
+
+export interface OakActionExperiment {
+  actionAndReq: OakActionAndRequest;
+  usefulness: number;
+  comment: string;
 }
