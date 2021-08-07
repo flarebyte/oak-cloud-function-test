@@ -12,6 +12,9 @@ describe('Object Abstractor', () => {
         text: 'some text',
         digital: 14,
         onOff: true,
+        biggerInt: BigInt(9007199254740991),
+        symbolic: Symbol('symbolic'),
+        myFunction: (x: number) => x + 10,
       });
       expect(actual).toMatchInlineSnapshot(`
         Array [
@@ -26,6 +29,18 @@ describe('Object Abstractor', () => {
           Object {
             "kind": "boolean",
             "path": "onOff",
+          },
+          Object {
+            "kind": "bigint",
+            "path": "biggerInt",
+          },
+          Object {
+            "kind": "symbol",
+            "path": "symbolic",
+          },
+          Object {
+            "kind": "function",
+            "path": "myFunction",
           },
         ]
       `);
@@ -57,7 +72,7 @@ describe('Object Abstractor', () => {
           },
           Object {
             "kind": "string",
-            "path": "descendant.name",
+            "path": "child.descendant.name",
           },
         ]
       `);

@@ -11,11 +11,17 @@ export type OakAbstractionRule = (value: any) => string
 const someString: OakAbstractionRule = (value: any) => typeof value === 'string' ? 'string' : ''
 const someNumber: OakAbstractionRule = (value: any) => typeof value === 'number' ? 'number' : ''
 const someBoolean: OakAbstractionRule = (value: any) => typeof value === 'boolean' ? 'boolean' : ''
+const someBigInt: OakAbstractionRule = (value: any) => typeof value === 'bigint' ? 'bigint' : ''
+const someSymbol: OakAbstractionRule = (value: any) => typeof value === 'symbol' ? 'symbol' : ''
+const someFunction: OakAbstractionRule = (value: any) => typeof value === 'function' ? 'function' : ''
 
 export const abstractionRules = [
     someString,
     someNumber,
-    someBoolean
+    someBoolean,
+    someBigInt,
+    someSymbol,
+    someFunction
 ]
 
 const applyRulesToEntry =(prefix: string, rules: OakAbstractionRule[]) => (keyValue: [string, any]) : OakAbstracted => {
@@ -31,6 +37,6 @@ const isBasicEntry = (keyValue: [string, any]): boolean => ! (typeof keyValue[1]
 
 export const abstractObject = (rules: OakAbstractionRule[], prefix: string = '') => (value: object): OakAbstracted[] => {
     const results =  Object.entries(value).filter(isBasicEntry).map(applyRulesToEntry(prefix, rules));
-    const objResults = Object.entries(value).filter(isObjectEntry).flatMap(keyValue => abstractObject(rules, `${keyValue[0]}.`)(keyValue[1]));
+    const objResults = Object.entries(value).filter(isObjectEntry).flatMap(keyValue => abstractObject(rules, `${prefix}${keyValue[0]}.`)(keyValue[1]));
     return [...results, ...objResults]
 }
