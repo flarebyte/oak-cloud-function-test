@@ -30,5 +30,37 @@ describe('Object Abstractor', () => {
         ]
       `);
     });
+    it('recognize nested objects', () => {
+      const actual = abstractor({
+        name: 'Louis XIV',
+        child: {
+          name: 'Louis XV',
+          id: 15,
+          descendant: {
+            name: 'Louis XVI',
+          },
+        },
+      });
+      expect(actual).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "kind": "string",
+            "path": "name",
+          },
+          Object {
+            "kind": "string",
+            "path": "child.name",
+          },
+          Object {
+            "kind": "number",
+            "path": "child.id",
+          },
+          Object {
+            "kind": "string",
+            "path": "descendant.name",
+          },
+        ]
+      `);
+    });
   });
 });
