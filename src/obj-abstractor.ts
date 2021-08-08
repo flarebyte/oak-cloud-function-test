@@ -7,6 +7,7 @@ export interface OakAbstracted {
 export type OakAbstractionRule = (value: string) => string
 
 const someUrl: OakAbstractionRule = (value: string) => value.startsWith('http://') || value.startsWith('https://') ? 'url': ''
+export const anyOfString = (name: string, options: string[]) => (value: string) => options.includes(value) ? name: ''
 
 export const abstractionRules = [
     someUrl,

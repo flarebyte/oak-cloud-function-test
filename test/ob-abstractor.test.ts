@@ -1,8 +1,15 @@
-import { abstractionRules, abstractObject } from '../src/obj-abstractor';
+import {
+  abstractionRules,
+  abstractObject,
+  anyOfString,
+} from '../src/obj-abstractor';
 
 describe('Object Abstractor', () => {
   describe('abstractObject', () => {
-    const abstractor = abstractObject(abstractionRules);
+    const abstractor = abstractObject([
+      ...abstractionRules,
+      anyOfString('color', ['blue', 'red', 'yellow']),
+    ]);
     it('ignore empty object', () => {
       const actual = abstractor({});
       expect(actual).toHaveLength(0);
@@ -66,8 +73,10 @@ describe('Object Abstractor', () => {
     it('recognize nested objects', () => {
       const actual = abstractor({
         name: 'Louis XIV',
+        style: 'yellow',
         child: {
           name: 'Louis XV',
+          style: 'blue',
           id: 15,
           descendant: {
             name: 'Louis XVI',
@@ -81,8 +90,16 @@ describe('Object Abstractor', () => {
             "path": "name",
           },
           Object {
+            "kind": "color",
+            "path": "style",
+          },
+          Object {
             "kind": "string",
             "path": "child.name",
+          },
+          Object {
+            "kind": "color",
+            "path": "child.style",
           },
           Object {
             "kind": "number",
