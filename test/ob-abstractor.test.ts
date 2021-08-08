@@ -45,6 +45,24 @@ describe('Object Abstractor', () => {
         ]
       `);
     });
+    it('recognizes advanced types', () => {
+      const actual = abstractor({
+        website: 'http://wikipedia.com',
+        bankSite: 'https://bank.com',
+      });
+      expect(actual).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "kind": "url",
+            "path": "website",
+          },
+          Object {
+            "kind": "url",
+            "path": "bankSite",
+          },
+        ]
+      `);
+    });
     it('recognize nested objects', () => {
       const actual = abstractor({
         name: 'Louis XIV',
@@ -73,6 +91,47 @@ describe('Object Abstractor', () => {
           Object {
             "kind": "string",
             "path": "child.descendant.name",
+          },
+        ]
+      `);
+    });
+    it('recognize arrays', () => {
+      const actual = abstractor({
+        name: 'Alpha',
+        listOfStrings: ['alpha', 'bravo'],
+        listOfNumbers: [12, 15, 17],
+        listOfObjects: [{ a: 1 }],
+        emptyList: [],
+      });
+      expect(actual).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "kind": "string",
+            "path": "name",
+          },
+          Object {
+            "kind": "string",
+            "path": "listOfStrings.0",
+          },
+          Object {
+            "kind": "string",
+            "path": "listOfStrings.1",
+          },
+          Object {
+            "kind": "number",
+            "path": "listOfNumbers.0",
+          },
+          Object {
+            "kind": "number",
+            "path": "listOfNumbers.1",
+          },
+          Object {
+            "kind": "number",
+            "path": "listOfNumbers.2",
+          },
+          Object {
+            "kind": "number",
+            "path": "listOfObjects.0.a",
           },
         ]
       `);

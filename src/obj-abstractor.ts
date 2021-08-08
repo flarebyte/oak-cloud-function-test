@@ -1,34 +1,26 @@
 
-const unknown = 'unknown'
-
 export interface OakAbstracted {
     path: string;
     kind: string;
 }
 
-export type OakAbstractionRule = (value: any) => string
+export type OakAbstractionRule = (value: string) => string
 
-const someString: OakAbstractionRule = (value: any) => typeof value === 'string' ? 'string' : ''
-const someNumber: OakAbstractionRule = (value: any) => typeof value === 'number' ? 'number' : ''
-const someBoolean: OakAbstractionRule = (value: any) => typeof value === 'boolean' ? 'boolean' : ''
-const someBigInt: OakAbstractionRule = (value: any) => typeof value === 'bigint' ? 'bigint' : ''
-const someSymbol: OakAbstractionRule = (value: any) => typeof value === 'symbol' ? 'symbol' : ''
-const someFunction: OakAbstractionRule = (value: any) => typeof value === 'function' ? 'function' : ''
+const someUrl: OakAbstractionRule = (value: string) => value.startsWith('http://') || value.startsWith('https://') ? 'url': ''
 
 export const abstractionRules = [
-    someString,
-    someNumber,
-    someBoolean,
-    someBigInt,
-    someSymbol,
-    someFunction
+    someUrl,
 ]
 
 const applyRulesToEntry =(prefix: string, rules: OakAbstractionRule[]) => (keyValue: [string, any]) : OakAbstracted => {
     const [childPath, value] = keyValue
     const path = `${prefix}${childPath}`
+    const defaultValue = {path,  kind: typeof value}
+    if (typeof value !== 'string') {
+        return defaultValue;
+    }
     const triggered = rules.map( rule => rule(value)).filter( v => v.length > 0)
-    return triggered.length === 0 ? {path,  kind: unknown} : { path, kind: triggered[0]};
+    return triggered.length === 0 ?  defaultValue : { path, kind: triggered[0]};
 }
 
 export const isObjectEntry = (keyValue: [string, any]): boolean => typeof keyValue[1] === 'object'
