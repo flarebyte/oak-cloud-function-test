@@ -101,6 +101,7 @@ describe('Object Abstractor', () => {
         listOfStrings: ['alpha', 'bravo'],
         listOfNumbers: [12, 15, 17],
         listOfObjects: [{ a: 1 }],
+        listOfUrls: ['http://website.com', 'http://website2.com'],
         emptyList: [],
       });
       expect(actual).toMatchInlineSnapshot(`
@@ -110,28 +111,24 @@ describe('Object Abstractor', () => {
             "path": "name",
           },
           Object {
-            "kind": "string",
-            "path": "listOfStrings.0",
+            "kind": "array/string",
+            "path": "listOfStrings",
           },
           Object {
-            "kind": "string",
-            "path": "listOfStrings.1",
+            "kind": "array/number",
+            "path": "listOfNumbers",
           },
           Object {
-            "kind": "number",
-            "path": "listOfNumbers.0",
+            "kind": "array/object",
+            "path": "listOfObjects",
           },
           Object {
-            "kind": "number",
-            "path": "listOfNumbers.1",
+            "kind": "array/url",
+            "path": "listOfUrls",
           },
           Object {
-            "kind": "number",
-            "path": "listOfNumbers.2",
-          },
-          Object {
-            "kind": "number",
-            "path": "listOfObjects.0.a",
+            "kind": "array/empty",
+            "path": "emptyList",
           },
         ]
       `);
