@@ -1,19 +1,13 @@
+import { OakObjAbstracted, OakObjAbstractionRule } from "./obj-tranf-model"
 
-export interface OakAbstracted {
-    path: string;
-    kind: string;
-}
-
-export type OakAbstractionRule = (value: string) => string
-
-const someUrl: OakAbstractionRule = (value: string) => value.startsWith('http://') || value.startsWith('https://') ? 'url': ''
+const someUrl: OakObjAbstractionRule = (value: string) => value.startsWith('http://') || value.startsWith('https://') ? 'url': ''
 export const anyOfString = (name: string, options: string[]) => (value: string) => options.includes(value) ? name: ''
 
 export const abstractionRules = [
     someUrl,
 ]
 
-const applyRulesToEntry =(prefix: string, rules: OakAbstractionRule[]) => (keyValue: [string, any]) : OakAbstracted => {
+const applyRulesToEntry =(prefix: string, rules: OakObjAbstractionRule[]) => (keyValue: [string, any]) : OakObjAbstracted => {
     const [childPath, value] = keyValue
     const path = `${prefix}${childPath}`
     const defaultValue = {path,  kind: typeof value}
@@ -24,7 +18,7 @@ const applyRulesToEntry =(prefix: string, rules: OakAbstractionRule[]) => (keyVa
     return triggered.length === 0 ?  defaultValue : { path, kind: triggered[0]};
 }
 
-const applyRulesToArrayEntry =(prefix: string, rules: OakAbstractionRule[]) => (keyValue: [string, any[]]) : OakAbstracted => {
+const applyRulesToArrayEntry =(prefix: string, rules: OakObjAbstractionRule[]) => (keyValue: [string, any[]]) : OakObjAbstracted => {
     const [childPath, values] = keyValue
     const path = `${prefix}${childPath}`
     if (values.length === 0) {
@@ -47,7 +41,7 @@ export const isArrayEntry = (keyValue: [string, any]): boolean => Array.isArray(
 
 const isBasicEntry = (keyValue: [string, any]): boolean => ! (isObjectEntry(keyValue) || isArrayEntry(keyValue))
 
-export const abstractObject = (rules: OakAbstractionRule[], prefix: string = '') => (value: object): OakAbstracted[] => {
+export const abstractObject = (rules: OakObjAbstractionRule[], prefix: string = '') => (value: object): OakObjAbstracted[] => {
     const results =  Object.entries(value).filter(isBasicEntry).map(applyRulesToEntry(prefix, rules));
     const arrayResults =  Object.entries(value).filter(isArrayEntry).map(applyRulesToArrayEntry(prefix, rules));
     const objResults = Object.entries(value).filter(isObjectEntry).flatMap(keyValue => abstractObject(rules, `${prefix}${keyValue[0]}.`)(keyValue[1]));
