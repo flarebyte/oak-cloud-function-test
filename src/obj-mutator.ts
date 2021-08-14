@@ -1,9 +1,16 @@
 import {
   OakObjApplicableMutation,
   OakObjFieldMutation,
+  OakObjFieldMutationRule,
 } from './obj-tranf-model';
 
 const unusualChar = '🤢';
+
+const identityRule: OakObjFieldMutation = {
+  name: 'identity',
+  fieldKind: 'any',
+  rule: (value: any) => value,
+};
 
 export const mutatorRules: OakObjFieldMutation[] = [
   {
@@ -59,8 +66,36 @@ export const mutatorRules: OakObjFieldMutation[] = [
   },
 ];
 
-export const mutateObject = (_rules: OakObjFieldMutation[]) => (
-  _mutation: OakObjApplicableMutation
+export const mutateObject = (rules: OakObjFieldMutation[]) => (
+  mutation: OakObjApplicableMutation
 ) => (value: object): object => {
-  return value;
+  const rule = (
+    rules.find(r => r.name === mutation.mutationName) || identityRule
+  ).rule;
+  const fieldValue = findFieldValue(mutation.path, value);
+  const newValue = rule(fieldValue);
+  return newValue;
+};
+
+
+export const findFieldValue = (path: string, value: object): any => {
+    const [first, ...rest] = path.split('.')
+    const objValue: { [name: string]:any } = value
+    const second = objValue[first]
+    if (rest.length === 0 || typeof second !== 'object') {
+        return second;
+    } else {
+        return findFieldValue(rest.join('.'), second)
+    }
+};
+
+export const transformFieldValue = (path: string, rule: OakObjFieldMutationRule, value: object): any => {
+    const [first, ...rest] = path.split('.')
+    const objValue: { [name: string]:any } = value
+    const second = objValue[first]
+    if (rest.length === 0 || typeof second !== 'object') {
+        return second;
+    } else {
+        return findFieldValue(rest.join('.'), second)
+    }
 };
