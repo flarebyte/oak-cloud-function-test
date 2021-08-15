@@ -125,7 +125,7 @@ const splitAlongPath = (
   path: string,
   content: { [key: string]: any }
 ): TmpStackPath[] => {
-  const paths = getPathAndParents(path);
+  const paths = getPathAndParents(path).reverse();
   return paths.map(p => ({ key: p, obj: findFieldValue(p, content) }));
 };
 
@@ -145,5 +145,5 @@ export const transformFieldValue = (
   const [first, ...rest] = splitAlongPath(path, content);
   const updatedStack = [{ key: first.key, obj: rule(first.obj) }, ...rest];
   const result = mergeAlongPath(updatedStack);
-  return result;
+  return result.obj;
 };
