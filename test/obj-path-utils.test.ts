@@ -1,4 +1,4 @@
-import { findFieldValue } from '../src/obj-mutator';
+import { findFieldValue, setFieldValue } from "../src/obj-path-utils";
 
 describe('Object Mutator', () => {
   describe('findFieldValue', () => {
@@ -43,4 +43,30 @@ describe('Object Mutator', () => {
       expect(actual).toEqual(asset.child.siblings[0]);
     });
   });
+  describe('setFieldValue', ()=> {
+    const asset = {
+      name: 'value-of-name',
+      child: {
+        name: 'child name',
+        sizes: [12, 15],
+        siblings: [{ name: 'paul' }, { name: 'joe' }],
+        game: {
+          description: 'fencing',
+        },
+      },
+    };
+    it('read field at the root', () => {
+      const actual = setFieldValue(asset, 'name', 'new-name');
+      expect(actual).toHaveProperty('name', 'new-name');
+    });
+    it('read field at the first child', () => {
+      const actual = setFieldValue(asset, 'child.name', 'child-new-value');
+      expect(actual).toHaveProperty('child.name', 'child-new-value');
+    });
+    it('read field with several levels', () => {
+      const actual = setFieldValue(asset, 'child.game.description', 'new-description');
+      expect(actual).toHaveProperty('child.game.description', 'new-description');
+    });
+    
+  })
 });

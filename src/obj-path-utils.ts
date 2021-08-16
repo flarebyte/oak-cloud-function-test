@@ -53,7 +53,7 @@ const splitAlongPath = (
 
 const mergeTwoPathStack = (a: TmpStackPath, b: TmpStackPath): TmpStackPath => ({
   key: b.key,
-  obj: copyObjField(a.key, a.obj, b.obj),
+  obj: copyObjField(b.key, a.obj, b.obj),
 });
 const mergeAlongPath = (
   stack: { key: string; obj: ObjectWithKeys }[]
@@ -61,8 +61,11 @@ const mergeAlongPath = (
 
 export const setFieldValue = (
   content: ObjectWithKeys,
-  _path: string,
-  _value: any
+  path: string,
+  value: any
 ): ObjectWithKeys => {
-  return content;
+  const [_first, ...rest] = splitAlongPath(path, content);
+  const updated = [{key: path, obj: value}, ...rest];
+  const result = mergeAlongPath(updated)
+  return result.obj;
 };
