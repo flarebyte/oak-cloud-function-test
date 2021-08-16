@@ -83,11 +83,11 @@ describe('Object Mutator', () => {
 
     it('transform field at the root', () => {
       const actual = transformFieldValue('name', transfString, asset);
-      expect(actual).toEqual(asset.name + '_');
+      expect(actual).toHaveProperty('name', asset.name + '_');
     });
     it('transform field at the first child', () => {
       const actual = transformFieldValue('child.name', transfString, asset);
-      expect(actual).toEqual(asset.child.name + '_');
+      expect(actual).toHaveProperty('child.name', asset.child.name + '_');
     });
     it('transform field with several levels', () => {
       const actual = transformFieldValue(
