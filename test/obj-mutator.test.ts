@@ -1,10 +1,7 @@
-import {
-  mutateObject,
-  mutatorRules,
-} from '../src/obj-mutator';
+import { mutateObject, mutatorRules } from '../src/obj-mutator';
 
 describe('Object Mutator', () => {
-  describe.skip('mutateObject', () => {
+  describe('mutateObject', () => {
     it('mutate an object with one rule', () => {
       const mutation = {
         path: 'name',
@@ -19,7 +16,7 @@ describe('Object Mutator', () => {
       });
       expect(actual).toHaveProperty('name');
       expect(actual).toHaveProperty('firstName');
-      expect(actual['name']).toHaveLength(100);
+      expect(actual['name']).toHaveLength(35000);
     });
   });
 });

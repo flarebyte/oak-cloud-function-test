@@ -18,3 +18,5 @@ export interface OakObjApplicableMutation {
   kind: string;
   mutationName: string;
 }
+
+export type ObjectWithKeys = { [key: string]: any };

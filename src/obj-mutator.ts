@@ -1,7 +1,8 @@
-import { findFieldValue } from './obj-path-utils';
+import { transformFieldValue } from './obj-path-utils';
 import {
   OakObjApplicableMutation,
   OakObjFieldMutation,
+  ObjectWithKeys,
 } from './obj-tranf-model';
 
 const unusualChar = '🤢';
@@ -68,11 +69,9 @@ export const mutatorRules: OakObjFieldMutation[] = [
 
 export const mutateObject = (rules: OakObjFieldMutation[]) => (
   mutation: OakObjApplicableMutation
-) => (value: object): object => {
+) => (content: ObjectWithKeys): ObjectWithKeys => {
   const rule = (
     rules.find(r => r.name === mutation.mutationName) || identityRule
   ).rule;
-  const fieldValue = findFieldValue(mutation.path, value);
-  const newValue = rule(fieldValue);
-  return newValue;
+  return transformFieldValue(mutation.path, rule, content);
 };

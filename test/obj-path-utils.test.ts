@@ -1,4 +1,9 @@
-import { findFieldValue, pathsOfSelfOrAncestors, setFieldValue, transformFieldValue } from "../src/obj-path-utils";
+import {
+  findFieldValue,
+  pathsOfSelfOrAncestors,
+  setFieldValue,
+  transformFieldValue,
+} from '../src/obj-path-utils';
 
 describe('Object Mutator', () => {
   describe('findFieldValue', () => {
@@ -43,7 +48,7 @@ describe('Object Mutator', () => {
       expect(actual).toEqual(asset.child.siblings[0]);
     });
   });
-  describe('pathsOfSelfOrAncestors', ()=> {
+  describe('pathsOfSelfOrAncestors', () => {
     it('read field at the root', () => {
       const actual = pathsOfSelfOrAncestors('name');
       expect(actual).toEqual(['name']);
@@ -54,11 +59,10 @@ describe('Object Mutator', () => {
     });
     it('read field with several levels', () => {
       const actual = pathsOfSelfOrAncestors('child.game.description');
-      expect(actual).toEqual(['child.game.description', 'child.game', 'child'])
+      expect(actual).toEqual(['child.game.description', 'child.game', 'child']);
     });
-    
-  })
-  describe('setFieldValue', ()=> {
+  });
+  describe('setFieldValue', () => {
     const asset = {
       name: 'value-of-name',
       child: {
@@ -70,7 +74,7 @@ describe('Object Mutator', () => {
         },
       },
     };
-    
+
     it('set field at the root', () => {
       const actual = setFieldValue(asset, 'name', 'new-name');
       expect(actual).toHaveProperty('name', 'new-name');
@@ -80,11 +84,17 @@ describe('Object Mutator', () => {
       expect(actual).toHaveProperty('child.name', 'child-new-value');
     });
     it('set field with several levels', () => {
-      const actual = setFieldValue(asset, 'child.game.description', 'new-description');
-      expect(actual).toHaveProperty('child.game.description', 'new-description');
+      const actual = setFieldValue(
+        asset,
+        'child.game.description',
+        'new-description'
+      );
+      expect(actual).toHaveProperty(
+        'child.game.description',
+        'new-description'
+      );
     });
-    
-  })
+  });
   describe('transformFieldValue', () => {
     const asset = {
       name: 'value-of-name',
@@ -114,9 +124,10 @@ describe('Object Mutator', () => {
         transfString,
         asset
       );
-      expect(actual).toHaveProperty('child.game.description', asset.child.game.description + '_');
+      expect(actual).toHaveProperty(
+        'child.game.description',
+        asset.child.game.description + '_'
+      );
     });
   });
 });
-
-

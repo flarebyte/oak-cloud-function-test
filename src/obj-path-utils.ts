@@ -1,3 +1,5 @@
+import { ObjectWithKeys } from './obj-tranf-model';
+
 export const findFieldValue = (path: string, value: object): any => {
   const [first, ...rest] = path.split('.');
   const objValue: { [name: string]: any } = value;
@@ -24,7 +26,10 @@ export const pathsOfSelfOrAncestors = (
   found: string[] = []
 ): string[] =>
   currentPath.includes('.')
-    ? pathsOfSelfOrAncestors(getParentPath(currentPath), [...found, currentPath])
+    ? pathsOfSelfOrAncestors(getParentPath(currentPath), [
+        ...found,
+        currentPath,
+      ])
     : [...found, currentPath];
 
 const copyObjField = (
@@ -40,7 +45,6 @@ const copyObjField = (
   );
 };
 
-type ObjectWithKeys = { [key: string]: any };
 type TmpStackPath = { key: string; obj: ObjectWithKeys };
 
 const splitAlongPath = (
@@ -65,8 +69,12 @@ export const setFieldValue = (
   value: any
 ): ObjectWithKeys => {
   const [_first, ...rest] = splitAlongPath(path, content).reverse();
-  const updated = [{key: path, obj: value}, ...rest, {key: '', obj: content}];
-  const result = mergeAlongPath(updated)
+  const updated = [
+    { key: path, obj: value },
+    ...rest,
+    { key: '', obj: content },
+  ];
+  const result = mergeAlongPath(updated);
   return result.obj;
 };
 
