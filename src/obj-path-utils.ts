@@ -11,7 +11,7 @@ export const findFieldValue = (path: string, value: object): any => {
 
 const getParentPath = (path: string): string => {
   const [_last, ...rest] = path.split('.').reverse();
-  return rest ? rest.join('.') : '';
+  return rest ? rest.reverse().join('.') : '';
 };
 
 const getKeyOfPath = (path: string): string => {
@@ -19,13 +19,13 @@ const getKeyOfPath = (path: string): string => {
   return last;
 };
 
-const getPathAndParents = (
+export const pathsOfSelfOrAncestors = (
   currentPath: string,
   found: string[] = []
 ): string[] =>
   currentPath.includes('.')
-    ? getPathAndParents(getParentPath(currentPath), [currentPath, ...found])
-    : [currentPath, ...found];
+    ? pathsOfSelfOrAncestors(getParentPath(currentPath), [...found, currentPath])
+    : [...found, currentPath];
 
 const copyObjField = (
   path: string,
@@ -47,13 +47,13 @@ const splitAlongPath = (
   path: string,
   content: ObjectWithKeys
 ): TmpStackPath[] => {
-  const paths = getPathAndParents(path).reverse();
+  const paths = pathsOfSelfOrAncestors(path).reverse();
   return paths.map(p => ({ key: p, obj: findFieldValue(p, content) }));
 };
 
 const mergeTwoPathStack = (a: TmpStackPath, b: TmpStackPath): TmpStackPath => ({
   key: b.key,
-  obj: copyObjField(b.key, a.obj, b.obj),
+  obj: copyObjField(a.key, a.obj, b.obj),
 });
 const mergeAlongPath = (
   stack: { key: string; obj: ObjectWithKeys }[]
@@ -64,8 +64,17 @@ export const setFieldValue = (
   path: string,
   value: any
 ): ObjectWithKeys => {
-  const [_first, ...rest] = splitAlongPath(path, content);
-  const updated = [{key: path, obj: value}, ...rest];
+  const [_first, ...rest] = splitAlongPath(path, content).reverse();
+  const updated = [{key: path, obj: value}, ...rest, {key: '', obj: content}];
   const result = mergeAlongPath(updated)
   return result.obj;
+};
+
+export const transformFieldValue = (
+  path: string,
+  transformer: (value: any) => any,
+  content: { [key: string]: any }
+): { [key: string]: any } => {
+  const updated = transformer(findFieldValue(path, content));
+  return setFieldValue(content, path, updated);
 };
