@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`S1 Storage Test read should read the latest value for path 1`] = `
+"[
+  {
+    \\"id\\": 0,
+    \\"businessOperationName\\": \\"write-to-london\\",
+    \\"serviceOperationName\\": \\"company:s1:write\\",
+    \\"serviceName\\": \\"company:s1\\",
+    \\"resourceName\\": \\"s3:london\\",
+    \\"caller\\": \\"test\\",
+    \\"serviceParams\\": {
+      \\"path\\": \\"london/city/data\\"
+    },
+    \\"systemFlags\\": \\"\\",
+    \\"reqComment\\": \\"write to london\\",
+    \\"reqPayload\\": {
+      \\"data\\": [
+        1,
+        2,
+        3,
+        17
+      ]
+    },
+    \\"reqFlags\\": \\"\\",
+    \\"statusName\\": \\"ok\\",
+    \\"respComment\\": \\"Success\\",
+    \\"respPayload\\": {
+      \\"message\\": \\"Saved\\"
+    },
+    \\"respFlags\\": \\"\\"
+  },
+  {
+    \\"id\\": 1,
+    \\"businessOperationName\\": \\"write-to-london\\",
+    \\"serviceOperationName\\": \\"company:s1:write\\",
+    \\"serviceName\\": \\"company:s1\\",
+    \\"resourceName\\": \\"s3:london\\",
+    \\"caller\\": \\"test\\",
+    \\"serviceParams\\": {
+      \\"path\\": \\"london/city/data\\"
+    },
+    \\"systemFlags\\": \\"\\",
+    \\"reqComment\\": \\"write to london\\",
+    \\"reqPayload\\": {
+      \\"data\\": [
+        1,
+        2,
+        3,
+        19
+      ]
+    },
+    \\"reqFlags\\": \\"\\",
+    \\"statusName\\": \\"ok\\",
+    \\"respComment\\": \\"Success\\",
+    \\"respPayload\\": {
+      \\"message\\": \\"Saved\\"
+    },
+    \\"respFlags\\": \\"\\"
+  },
+  {
+    \\"id\\": 2,
+    \\"businessOperationName\\": \\"read-from-london\\",
+    \\"serviceOperationName\\": \\"company:s1:read\\",
+    \\"serviceName\\": \\"company:s1\\",
+    \\"resourceName\\": \\"s3:london\\",
+    \\"caller\\": \\"test\\",
+    \\"serviceParams\\": {
+      \\"path\\": \\"london/city/data\\"
+    },
+    \\"systemFlags\\": \\"\\",
+    \\"reqComment\\": \\"read to london\\",
+    \\"reqPayload\\": {},
+    \\"reqFlags\\": \\"\\",
+    \\"statusName\\": \\"ok\\",
+    \\"respComment\\": \\"Success\\",
+    \\"respPayload\\": {
+      \\"data\\": [
+        1,
+        2,
+        3,
+        19
+      ]
+    },
+    \\"respFlags\\": \\"\\"
+  }
+]"
+`;
