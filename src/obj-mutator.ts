@@ -1,3 +1,4 @@
+import { Anything } from './model';
 import { transformFieldValue } from './obj-path-utils';
 import {
   OakObjApplicableMutation,
@@ -10,14 +11,14 @@ const unusualChar = '🤢';
 const identityRule: OakObjFieldMutation = {
   name: 'identity',
   fieldKind: 'any',
-  rule: (value: any) => value,
+  rule: (value: Anything) => value,
 };
 
 export const mutatorRules: OakObjFieldMutation[] = [
   {
     name: 'string => empty',
     fieldKind: 'string',
-    rule: (_: string) => '',
+    rule: () => '',
   },
   {
     name: 'string => large',

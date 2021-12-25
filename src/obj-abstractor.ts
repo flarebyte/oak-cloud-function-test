@@ -1,3 +1,4 @@
+import { Anything } from './model';
 import { OakObjAbstracted, OakObjAbstractionRule } from './obj-tranf-model';
 
 const someUrl: OakObjAbstractionRule = (value: string) =>
@@ -10,7 +11,7 @@ export const abstractionRules = [someUrl];
 
 const applyRulesToEntry =
   (prefix: string, rules: OakObjAbstractionRule[]) =>
-  (keyValue: [string, any]): OakObjAbstracted => {
+  (keyValue: [string, Anything]): OakObjAbstracted => {
     const [childPath, value] = keyValue;
     const path = `${prefix}${childPath}`;
     const defaultValue = { path, kind: typeof value };
@@ -25,7 +26,7 @@ const applyRulesToEntry =
 
 const applyRulesToArrayEntry =
   (prefix: string, rules: OakObjAbstractionRule[]) =>
-  (keyValue: [string, any[]]): OakObjAbstracted => {
+  (keyValue: [string, Anything[]]): OakObjAbstracted => {
     const [childPath, values] = keyValue;
     const path = `${prefix}${childPath}`;
     if (values.length === 0) {
@@ -46,13 +47,13 @@ const applyRulesToArrayEntry =
     }
   };
 
-export const isObjectEntry = (keyValue: [string, any]): boolean =>
+export const isObjectEntry = (keyValue: [string, Anything]): boolean =>
   !Array.isArray(keyValue[1]) && typeof keyValue[1] === 'object';
 
-export const isArrayEntry = (keyValue: [string, any]): boolean =>
+export const isArrayEntry = (keyValue: [string, Anything]): boolean =>
   Array.isArray(keyValue[1]);
 
-const isBasicEntry = (keyValue: [string, any]): boolean =>
+const isBasicEntry = (keyValue: [string, Anything]): boolean =>
   !(isObjectEntry(keyValue) || isArrayEntry(keyValue));
 
 export const abstractObject =

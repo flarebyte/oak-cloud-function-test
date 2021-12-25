@@ -1,3 +1,4 @@
+import { strict as assert } from 'assert';
 import {
   mergeActionCompanions,
   mergeFunctionCompanions,
@@ -210,5 +211,8 @@ export class OakSimulator {
     return this.context.transactions.map(summarizeServiceOpTransactionPerf);
   }
 
-  runAction(_action: OakAction, _request: OakActionRequestEvent) {}
+  runAction(action: OakAction, request: OakActionRequestEvent) {
+    assert.ok(action, 'action must be defined');
+    assert.ok(request, 'request must be defined');
+  }
 }

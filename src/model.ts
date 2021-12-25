@@ -19,6 +19,8 @@ export interface OakServiceOperation extends OakBase {
   };
 }
 
+export type Anything = string | number | boolean | object;
+
 export type OakResource = OakBase;
 
 /**

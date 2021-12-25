@@ -1,9 +1,11 @@
+import { Anything } from './model';
+
 export interface OakObjAbstracted {
   path: string;
   kind: string;
 }
 
-export type OakObjFieldMutationRule = (value: any) => any;
+export type OakObjFieldMutationRule = (value: Anything) => Anything;
 
 export interface OakObjFieldMutation {
   name: string;
@@ -19,4 +21,4 @@ export interface OakObjApplicableMutation {
   mutationName: string;
 }
 
-export type ObjectWithKeys = { [key: string]: any };
+export type ObjectWithKeys = { [key: string]: Anything };
