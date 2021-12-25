@@ -38,22 +38,22 @@ export const mutatorRules: OakObjFieldMutation[] = [
   {
     name: 'number => zero',
     fieldKind: 'number',
-    rule: (_: number) => 0,
+    rule: () => 0,
   },
   {
     name: 'number => big',
     fieldKind: 'number',
-    rule: (_: number) => 1007199254740991,
+    rule: () => 1007199254740991,
   },
   {
     name: 'number => negative',
     fieldKind: 'number',
-    rule: (_: number) => -10,
+    rule: () => -10,
   },
   {
     name: 'url => empty',
     fieldKind: 'url',
-    rule: (_: string) => '',
+    rule: () => '',
   },
   {
     name: 'url => large',
@@ -67,11 +67,12 @@ export const mutatorRules: OakObjFieldMutation[] = [
   },
 ];
 
-export const mutateObject = (rules: OakObjFieldMutation[]) => (
-  mutation: OakObjApplicableMutation
-) => (content: ObjectWithKeys): ObjectWithKeys => {
-  const rule = (
-    rules.find(r => r.name === mutation.mutationName) || identityRule
-  ).rule;
-  return transformFieldValue(mutation.path, rule, content);
-};
+export const mutateObject =
+  (rules: OakObjFieldMutation[]) =>
+  (mutation: OakObjApplicableMutation) =>
+  (content: ObjectWithKeys): ObjectWithKeys => {
+    const rule = (
+      rules.find((r) => r.name === mutation.mutationName) || identityRule
+    ).rule;
+    return transformFieldValue(mutation.path, rule, content);
+  };

@@ -1,6 +1,5 @@
-import { OakAction } from './model';
+import { OakAction, OakFunction } from './model';
 import { version } from './version';
-import { OakFunction } from '../src/model';
 
 const template = {
   version,

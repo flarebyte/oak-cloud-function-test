@@ -104,55 +104,58 @@ export class OakSimulator {
 
   _registerActionCompanions(companions: OakActionCompanion[]) {
     const oneCompanion = mergeActionCompanions(companions);
-    const wrapper: OakCallWrapper = (
-      serviceOperation: OakServiceOperation,
-      wrapped: OakCall
-    ) => async (request: OakRequestEvent): Promise<OakResponseEvent> => {
-      const thisContext = this.context;
-      const reqEvent: OakRequestEvent = {
-        ...request,
-        systemFlags: [...request.systemFlags, ...thisContext.systemFlags],
+    const wrapper: OakCallWrapper =
+      (serviceOperation: OakServiceOperation, wrapped: OakCall) =>
+      async (request: OakRequestEvent): Promise<OakResponseEvent> => {
+        const thisContext = this.context;
+        const reqEvent: OakRequestEvent = {
+          ...request,
+          systemFlags: [...request.systemFlags, ...thisContext.systemFlags],
+        };
+        const measuring = measureTime();
+        const beforeIntercept = this.beforeCall(
+          serviceOperation,
+          thisContext,
+          reqEvent
+        );
+        const respEvent = beforeIntercept.pass
+          ? await wrapped(thisContext, reqEvent)
+          : await beforeIntercept.call(thisContext, reqEvent);
+        const nanoSeconds = measuring();
+        this._addTransaction(
+          serviceOperation,
+          reqEvent,
+          respEvent,
+          nanoSeconds
+        );
+        return respEvent;
       };
-      const measuring = measureTime();
-      const beforeIntercept = this.beforeCall(
-        serviceOperation,
-        thisContext,
-        reqEvent
-      );
-      const respEvent = beforeIntercept.pass
-        ? await wrapped(thisContext, reqEvent)
-        : await beforeIntercept.call(thisContext, reqEvent);
-      const nanoSeconds = measuring();
-      this._addTransaction(serviceOperation, reqEvent, respEvent, nanoSeconds);
-      return respEvent;
-    };
     this.actionCompanion = transformActionCompanion(wrapper)(oneCompanion);
   }
 
   _registerFunctionCompanions(
     companionBuilders: OakFunctionCompanionBuilder[]
   ) {
-    const companions = companionBuilders.map(builder =>
+    const companions = companionBuilders.map((builder) =>
       builder(this.actionCompanion)
     );
     const oneCompanion = mergeFunctionCompanions(companions);
-    const wrapper: OakActionCallWrapper = (
-      action: OakAction,
-      wrapped: OakActionCall
-    ) => async (request: OakActionRequestEvent): Promise<OakResponseEvent> => {
-      const thisContext = this.context;
-      const reqEvent: OakActionRequestEvent = {
-        ...request,
-        systemFlags: [...request.systemFlags, ...thisContext.systemFlags],
+    const wrapper: OakActionCallWrapper =
+      (action: OakAction, wrapped: OakActionCall) =>
+      async (request: OakActionRequestEvent): Promise<OakResponseEvent> => {
+        const thisContext = this.context;
+        const reqEvent: OakActionRequestEvent = {
+          ...request,
+          systemFlags: [...request.systemFlags, ...thisContext.systemFlags],
+        };
+        const respEvent = await wrapped(
+          thisContext,
+          this.actionCompanion,
+          reqEvent
+        );
+        this._addActionTransaction(action, reqEvent, respEvent);
+        return respEvent;
       };
-      const respEvent = await wrapped(
-        thisContext,
-        this.actionCompanion,
-        reqEvent
-      );
-      this._addActionTransaction(action, reqEvent, respEvent);
-      return respEvent;
-    };
     this.functionCompanion = transformFunctionCompanion(wrapper)(oneCompanion);
   }
 

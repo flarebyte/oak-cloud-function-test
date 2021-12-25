@@ -32,7 +32,7 @@ export const updateReturnStatus = (
   existingFlags: string[]
 ): string[] => {
   const removedPrevious = existingFlags.filter(
-    flag => !flag.startsWith(responseStatusFlag)
+    (flag) => !flag.startsWith(responseStatusFlag)
   );
   const newFlag = `${responseStatusFlag}${status.name}`;
   return [...removedPrevious, newFlag];

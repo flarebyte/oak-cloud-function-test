@@ -4,11 +4,11 @@ export interface OakBase {
   flags: string[];
 }
 
-export interface OakStatus extends OakBase {}
+export type OakStatus = OakBase;
 /**
  * Ex: aws:s3
  */
-export interface OakService extends OakBase {}
+export type OakService = OakBase;
 
 export interface OakServiceOperation extends OakBase {
   functionName: string;
@@ -19,7 +19,7 @@ export interface OakServiceOperation extends OakBase {
   };
 }
 
-export interface OakResource extends OakBase {}
+export type OakResource = OakBase;
 
 /**
  * Configuration of a service

@@ -39,7 +39,7 @@ const copyObjField = (
 ): { [key: string]: any } => {
   const key = getKeyOfPath(path);
   return Object.fromEntries(
-    Object.entries(content).map(keyValue =>
+    Object.entries(content).map((keyValue) =>
       key === keyValue[0] ? [key, newValue] : keyValue
     )
   );
@@ -52,7 +52,7 @@ const splitAlongPath = (
   content: ObjectWithKeys
 ): TmpStackPath[] => {
   const paths = pathsOfSelfOrAncestors(path).reverse();
-  return paths.map(p => ({ key: p, obj: findFieldValue(p, content) }));
+  return paths.map((p) => ({ key: p, obj: findFieldValue(p, content) }));
 };
 
 const mergeTwoPathStack = (a: TmpStackPath, b: TmpStackPath): TmpStackPath => ({
