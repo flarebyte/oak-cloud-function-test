@@ -16,40 +16,36 @@ const neverResponse: OakResponseEvent = {
   payload: {},
   flags: [],
 };
-const neverCall = (
-  _context: OakEngineContext,
-  _request: OakRequestEvent
-): Promise<OakResponseEvent> => Promise.resolve(neverResponse);
+const neverCall = (): Promise<OakResponseEvent> =>
+  Promise.resolve(neverResponse);
 
-const shortcutWithStatus = (status: OakStatus) => (
-  _context: OakEngineContext,
-  _request: OakRequestEvent
-): Promise<OakResponseEvent> =>
-  Promise.resolve({
-    comment: 'shortcut by simulator',
-    status,
-    payload: {},
-    flags: [],
-  });
+const shortcutWithStatus =
+  (status: OakStatus) => (): Promise<OakResponseEvent> =>
+    Promise.resolve({
+      comment: 'shortcut by simulator',
+      status,
+      payload: {},
+      flags: [],
+    });
 
-export const defaultBeforeCall = (refStatusDict: {
-  [name: string]: OakStatus;
-}) => (
-  _serviceOperation: OakServiceOperation,
-  context: OakEngineContext,
-  request: OakRequestEvent
-): OakBeforeCallInterceptor => {
-  const boFlags =
-    context.businessOperationFlags[request.businessOperation.name] || [];
-  const status = shouldReturnStatus(refStatusDict, boFlags);
-  if (!status) {
+export const defaultBeforeCall =
+  (refStatusDict: { [name: string]: OakStatus }) =>
+  (
+    _serviceOperation: OakServiceOperation,
+    context: OakEngineContext,
+    request: OakRequestEvent
+  ): OakBeforeCallInterceptor => {
+    const boFlags =
+      context.businessOperationFlags[request.businessOperation.name] || [];
+    const status = shouldReturnStatus(refStatusDict, boFlags);
+    if (!status) {
+      return {
+        pass: true,
+        call: neverCall,
+      };
+    }
     return {
-      pass: true,
-      call: neverCall,
+      pass: false,
+      call: shortcutWithStatus(status),
     };
-  }
-  return {
-    pass: false,
-    call: shortcutWithStatus(status),
   };
-};

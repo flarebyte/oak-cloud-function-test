@@ -19,7 +19,7 @@ export const findStatusByName = (
   name: string,
   statusList: OakStatus[]
 ): OakStatus | false =>
-  statusList.find(status => status.name === name) || false;
+  statusList.find((status) => status.name === name) || false;
 
 export const findStatusByNameInDict = (
   name: string,

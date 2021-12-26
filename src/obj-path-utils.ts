@@ -1,8 +1,8 @@
-import { ObjectWithKeys } from './obj-tranf-model';
+import { ObjectValue, AdvancedObject } from './obj-tranf-model';
 
-export const findFieldValue = (path: string, value: object): any => {
+export const findFieldValue = (path: string, value: AdvancedObject): ObjectValue => {
   const [first, ...rest] = path.split('.');
-  const objValue: { [name: string]: any } = value;
+  const objValue: { [name: string]: ObjectValue } = value;
   const second = objValue[first];
   if (rest.length === 0 || typeof second !== 'object') {
     return second;
@@ -12,12 +12,12 @@ export const findFieldValue = (path: string, value: object): any => {
 };
 
 const getParentPath = (path: string): string => {
-  const [_last, ...rest] = path.split('.').reverse();
+  const rest = path.split('.').reverse().slice(1);
   return rest ? rest.reverse().join('.') : '';
 };
 
 const getKeyOfPath = (path: string): string => {
-  const [last, ..._rest] = path.split('.').reverse();
+  const last = path.split('.').reverse()[0];
   return last;
 };
 
@@ -34,25 +34,25 @@ export const pathsOfSelfOrAncestors = (
 
 const copyObjField = (
   path: string,
-  newValue: any,
-  content: { [key: string]: any }
-): { [key: string]: any } => {
+  newValue: ObjectValue,
+  content: { [key: string]: ObjectValue }
+): { [key: string]: ObjectValue } => {
   const key = getKeyOfPath(path);
   return Object.fromEntries(
-    Object.entries(content).map(keyValue =>
+    Object.entries(content).map((keyValue) =>
       key === keyValue[0] ? [key, newValue] : keyValue
     )
   );
 };
 
-type TmpStackPath = { key: string; obj: ObjectWithKeys };
+type TmpStackPath = { key: string; obj: AdvancedObject };
 
 const splitAlongPath = (
   path: string,
-  content: ObjectWithKeys
+  content: AdvancedObject
 ): TmpStackPath[] => {
   const paths = pathsOfSelfOrAncestors(path).reverse();
-  return paths.map(p => ({ key: p, obj: findFieldValue(p, content) }));
+  return paths.map((p) => ({ key: p, obj: findFieldValue(p, content) }));
 };
 
 const mergeTwoPathStack = (a: TmpStackPath, b: TmpStackPath): TmpStackPath => ({
@@ -60,15 +60,15 @@ const mergeTwoPathStack = (a: TmpStackPath, b: TmpStackPath): TmpStackPath => ({
   obj: copyObjField(a.key, a.obj, b.obj),
 });
 const mergeAlongPath = (
-  stack: { key: string; obj: ObjectWithKeys }[]
-): { [key: string]: any } => stack.reduce(mergeTwoPathStack);
+  stack: { key: string; obj: AdvancedObject }[]
+): { [key: string]: ObjectValue } => stack.reduce(mergeTwoPathStack);
 
 export const setFieldValue = (
-  content: ObjectWithKeys,
+  content: AdvancedObject,
   path: string,
-  value: any
-): ObjectWithKeys => {
-  const [_first, ...rest] = splitAlongPath(path, content).reverse();
+  value: ObjectValue
+): AdvancedObject => {
+  const rest = splitAlongPath(path, content).reverse().slice(1);
   const updated = [
     { key: path, obj: value },
     ...rest,
@@ -80,9 +80,9 @@ export const setFieldValue = (
 
 export const transformFieldValue = (
   path: string,
-  transformer: (value: any) => any,
-  content: { [key: string]: any }
-): { [key: string]: any } => {
+  transformer: (value: ObjectValue) => ObjectValue,
+  content: AdvancedObject
+): AdvancedObject => {
   const updated = transformer(findFieldValue(path, content));
   return setFieldValue(content, path, updated);
 };

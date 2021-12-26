@@ -4,12 +4,20 @@ export interface OakBase {
   flags: string[];
 }
 
-export interface OakStatus extends OakBase {}
 /**
- * Ex: aws:s3
+ * Metadata about a status that a function or cloud service would return
  */
-export interface OakService extends OakBase {}
+export type OakStatus = OakBase;
 
+/**
+ * Metadata about a cloud service
+ * @example aws:s3
+ */
+export type OakService = OakBase;
+
+/**
+ * Metadata about an operation available on a cloud service
+ */
 export interface OakServiceOperation extends OakBase {
   functionName: string;
   service: OakService;
@@ -19,7 +27,15 @@ export interface OakServiceOperation extends OakBase {
   };
 }
 
-export interface OakResource extends OakBase {}
+export type Primary = null
+| undefined
+| string
+| number
+| boolean
+| symbol
+| bigint;
+
+export type OakResource = OakBase;
 
 /**
  * Configuration of a service
@@ -29,6 +45,9 @@ export interface OakBusinessOperation extends OakBase {
   resource: OakResource;
 }
 
+/**
+ * Metadata for an action
+ */
 export interface OakAction extends OakBase {
   functionName: string;
   version: string;
@@ -51,7 +70,9 @@ export interface OakFunction extends OakBase {
     [name: string]: string;
   };
 }
-
+/**
+ * An event that represent a payload
+ */
 export interface OakEvent {
   comment: string;
   payload: object;
@@ -65,6 +86,9 @@ export interface OakRequestEvent extends OakEvent {
   systemFlags: string[];
 }
 
+/**
+ * An event representing a response from a service
+ */
 export interface OakResponseEvent extends OakEvent {
   status: OakStatus;
 }
@@ -95,6 +119,9 @@ export interface OakActionAndRequest {
   request: OakActionRequestEvent;
 }
 
+/**
+ * Metadata about a service and the available operations
+ */
 export interface OakServiceData extends OakBase {
   service: OakService;
   version: string;
@@ -105,7 +132,9 @@ export interface OakServiceData extends OakBase {
     [name: string]: OakStatus;
   };
 }
-
+/**
+ * A context object for the engine
+ */
 export interface OakEngineContext {
   transactions: OakEventTransaction[];
   actionTransactions: OakActionEventTransaction[];
@@ -121,6 +150,9 @@ export interface OakEngineContext {
   };
 }
 
+/**
+ * A low level call to the cloud service that should be simulated 
+ */
 export type OakCall = (
   context: OakEngineContext,
   request: OakRequestEvent
