@@ -1,5 +1,4 @@
-import { Anything } from './model';
-import { OakObjAbstracted, OakObjAbstractionRule } from './obj-tranf-model';
+import { OakObjAbstracted, OakObjAbstractionRule, ObjectValue, AdvancedObject } from './obj-tranf-model';
 
 const someUrl: OakObjAbstractionRule = (value: string) =>
   value.startsWith('http://') || value.startsWith('https://') ? 'url' : '';
@@ -11,7 +10,7 @@ export const abstractionRules = [someUrl];
 
 const applyRulesToEntry =
   (prefix: string, rules: OakObjAbstractionRule[]) =>
-  (keyValue: [string, Anything]): OakObjAbstracted => {
+  (keyValue: [string, ObjectValue]): OakObjAbstracted => {
     const [childPath, value] = keyValue;
     const path = `${prefix}${childPath}`;
     const defaultValue = { path, kind: typeof value };
@@ -26,7 +25,7 @@ const applyRulesToEntry =
 
 const applyRulesToArrayEntry =
   (prefix: string, rules: OakObjAbstractionRule[]) =>
-  (keyValue: [string, Anything[]]): OakObjAbstracted => {
+  (keyValue: [string, ObjectValue[]]): OakObjAbstracted => {
     const [childPath, values] = keyValue;
     const path = `${prefix}${childPath}`;
     if (values.length === 0) {
@@ -47,18 +46,18 @@ const applyRulesToArrayEntry =
     }
   };
 
-export const isObjectEntry = (keyValue: [string, Anything]): boolean =>
+export const isObjectEntry = (keyValue: [string, ObjectValue]): boolean =>
   !Array.isArray(keyValue[1]) && typeof keyValue[1] === 'object';
 
-export const isArrayEntry = (keyValue: [string, Anything]): boolean =>
+export const isArrayEntry = (keyValue: [string, ObjectValue]): boolean =>
   Array.isArray(keyValue[1]);
 
-const isBasicEntry = (keyValue: [string, Anything]): boolean =>
+const isBasicEntry = (keyValue: [string, ObjectValue]): boolean =>
   !(isObjectEntry(keyValue) || isArrayEntry(keyValue));
 
 export const abstractObject =
   (rules: OakObjAbstractionRule[], prefix = '') =>
-  (value: object): OakObjAbstracted[] => {
+  (value: AdvancedObject): OakObjAbstracted[] => {
     const results = Object.entries(value)
       .filter(isBasicEntry)
       .map(applyRulesToEntry(prefix, rules));

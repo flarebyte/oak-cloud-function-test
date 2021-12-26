@@ -27,7 +27,13 @@ export interface OakServiceOperation extends OakBase {
   };
 }
 
-export type Anything = string | number | boolean | object;
+export type Primary = null
+| undefined
+| string
+| number
+| boolean
+| symbol
+| bigint;
 
 export type OakResource = OakBase;
 
@@ -39,6 +45,9 @@ export interface OakBusinessOperation extends OakBase {
   resource: OakResource;
 }
 
+/**
+ * Metadata for an action
+ */
 export interface OakAction extends OakBase {
   functionName: string;
   version: string;

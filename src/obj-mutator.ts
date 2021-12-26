@@ -1,9 +1,9 @@
-import { Anything } from './model';
 import { transformFieldValue } from './obj-path-utils';
 import {
   OakObjApplicableMutation,
   OakObjFieldMutation,
-  ObjectWithKeys,
+  ObjectValue,
+  AdvancedObject,
 } from './obj-tranf-model';
 
 const unusualChar = '🤢';
@@ -11,7 +11,7 @@ const unusualChar = '🤢';
 const identityRule: OakObjFieldMutation = {
   name: 'identity',
   fieldKind: 'any',
-  rule: (value: Anything) => value,
+  rule: (value: ObjectValue) => value,
 };
 
 export const mutatorRules: OakObjFieldMutation[] = [
@@ -71,7 +71,7 @@ export const mutatorRules: OakObjFieldMutation[] = [
 export const mutateObject =
   (rules: OakObjFieldMutation[]) =>
   (mutation: OakObjApplicableMutation) =>
-  (content: ObjectWithKeys): ObjectWithKeys => {
+  (content: AdvancedObject): AdvancedObject => {
     const rule = (
       rules.find((r) => r.name === mutation.mutationName) || identityRule
     ).rule;
